@@ -1,0 +1,225 @@
+{
+    "WikipediaScraper": {
+        "bucket_key": "{main_folder}/wikipedia",
+        "base_url": "https://en.wikipedia.org/",
+        "files_by_request": false,
+        "sources": [
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Communications_satellites",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Satellite_broadcasting",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Satellites_by_type",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Wireless_communication_systems",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/European_Cooperation_for_Space_Standardization",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Spaceflight_concepts",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Telecommunications_infrastructure",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Spaceflight_ground_equipment",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Spacecraft_communication",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Systems_engineering",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Space_organizations",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Space_technology",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Space_policy",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:European_Space_Agency",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:3GPP_standards",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Telecommunications_organizations",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:Mobile_telecommunications_standards",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:International_Telecommunication_Union",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://en.wikipedia.org/wiki/Category:ITU-R_recommendations",
+                "type": "issue_or_collection"
+            }
+        ]
+    },
+    "WileyScraper": {
+        "bucket_key": "{main_folder}/wiley",
+        "cookie_selector": "button.osano-cm-accept-all",
+        "request_with_proxy": true,
+        "sources": [
+            {
+                "landing_page_url": "https://agupubs.onlinelibrary.wiley.com/action/doSearch?SeriesKey=2576604x&sortBy=Earliest&accessStatusFilter=on&pageSize={page_size}&startPage={page_number}",
+                "name": "Advancing Earth and Space Science",
+                "base_url": "https://agupubs.onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://advanced.onlinelibrary.wiley.com/action/doSearch?SeriesKey=2199160x&sortBy=Earliest&ConceptID=15941&pageSize={page_size}&startPage={page_number}",
+                "name": "Advanced",
+                "base_url": "https://advanced.onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/action/doSearch?SeriesKey=5081&sortBy=Earliest&ConceptID=15941&pageSize={page_size}&startPage={page_number}",
+                "name": "Advances in Astronomy",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://ietresearch.onlinelibrary.wiley.com/action/doSearch?SeriesKey=17518636&sortBy=Earliest&pageSize={page_size}&startPage={page_number}",
+                "name": "IET Communications",
+                "base_url": "https://ietresearch.onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://ietresearch.onlinelibrary.wiley.com/action/doSearch?SeriesKey=17518733&sortBy=Earliest&ConceptID=15941&pageSize={page_size}&startPage={page_number}",
+                "name": "IET Microwaves, Antennas & Propagation",
+                "base_url": "https://ietresearch.onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://ietresearch.onlinelibrary.wiley.com/action/doSearch?SeriesKey=ietsp&sortBy=Earliest&ConceptID=15941&pageSize={page_size}&startPage={page_number}",
+                "name": "IET Signal Processing",
+                "base_url": "https://ietresearch.onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/action/doSearch?SeriesKey=8039&sortBy=Earliest&pageSize={page_size}&startPage={page_number}",
+                "name": "International Journal of Antennas and Propagation",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/action/doSearch?SeriesKey=9246&sortBy=Earliest&pageSize={page_size}&startPage={page_number}",
+                "name": "International Journal of Digital Multimedia Broadcasting",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/action/doSearch?SeriesKey=1961&sortBy=Earliest&pageSize={page_size}&startPage={page_number}",
+                "name": "International Journal of Reconfigurable Computing",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/action/doSearch?SeriesKey=9613&sortBy=Earliest&pageSize={page_size}&startPage={page_number}",
+                "name": "Journal of Computer Systems, Networks, and Communications",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/index/1742&pageSize={page_size}&startPage={page_number}",
+                "name": "Journal of Electrical and Computer Engineering",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://onlinelibrary.wiley.com/index/5080&pageSize={page_size}&startPage={page_number}",
+                "name": "Active and Passive Electronic Components",
+                "base_url": "https://onlinelibrary.wiley.com",
+                "page_size": 100
+            }
+        ]
+    },
+    "SpringerScraper": {
+        "bucket_key": "{main_folder}/springer",
+        "sources": [
+            {
+                "name": "Springer journals / collections",
+                "scraper": "SpringerUrlScraper",
+                "config": {
+                    "cookie_selector": "button.cc-banner__button-accept",
+                    "base_url": "https://link.springer.com",
+                    "sources": [
+                        {
+                            "url": "https://link.springer.com/journal/43673/articles",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://link.springer.com/journal/40747/articles",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://link.springer.com/journal/44291/articles",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://link.springer.com/journal/43926/articles",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://cybersecurity.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://cybersecurity.springeropen.com"
+                        },
+                        {
+                            "url": "https://asp-eurasipjournals.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://asp-eurasipjournals.springeropen.com"
+                        },
+                        {
+                            "url": " https://jis-eurasipjournals.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://jis-eurasipjournals.springeropen.com"
+                        },
+                        {
+                            "url": " https://jwcn-eurasipjournals.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://jwcn-eurasipjournals.springeropen.com"
+                        },
+                        {
+                            "url": "https://earth-planets-space.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://earth-planets-space.springeropen.com"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

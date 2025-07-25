@@ -357,6 +357,20 @@ def get_bool_env(key: str, default: str) -> bool:
     return v == "true" or v == "1"
 
 
+def get_scraper_url_by(href: str, base_url: str, with_querystring: bool | None = False) -> str:
+    if href.startswith("http"):
+        return href.strip()
+
+    # Remove trailing/leading slashes except in http(s)://
+    prefix = base_url.rstrip("/")
+    if prefix.endswith(":"):
+        prefix += "//"
+
+    # Join with single slash
+    result = f"{prefix}/{href.lstrip('/').strip()}"
+    return result if with_querystring else remove_query_string_from_url(result)
+
+
 def get_scraped_url_by_bs_tag(tag: Tag, base_url: str, with_querystring: bool | None = False) -> str:
     """
     Get the URL from the Tag.
@@ -370,17 +384,7 @@ def get_scraped_url_by_bs_tag(tag: Tag, base_url: str, with_querystring: bool | 
         List[str]: A list of URLs of the articles in the issue.
     """
     href = tag.get("href", getattr(tag, "href"))
-    if href.startswith("http"):
-        return href.strip()
-
-    # Remove trailing/leading slashes except in http(s)://
-    prefix = base_url.rstrip("/")
-    if prefix.endswith(":"):
-        prefix += "//"
-
-    # Join with single slash
-    result = f"{prefix}/{href.lstrip('/').strip()}"
-    return result if with_querystring else remove_query_string_from_url(result)
+    return get_scraper_url_by(href, base_url, with_querystring)
 
 
 def get_scraped_url_by_web_element(we: WebElement, base_url: str, with_querystring: bool | None = False) -> str:
@@ -396,17 +400,7 @@ def get_scraped_url_by_web_element(we: WebElement, base_url: str, with_querystri
         List[str]: A list of URLs of the articles in the issue.
     """
     href = we.get_attribute("href") or getattr(we, "href")
-    if href.startswith("http"):
-        return href.strip()
-
-    # Remove trailing/leading slashes except in http(s)://
-    prefix = base_url.rstrip("/")
-    if prefix.endswith(":"):
-        prefix += "//"
-
-    # Join with single slash
-    result = f"{prefix}/{href.lstrip('/').strip()}"
-    return result if with_querystring else remove_query_string_from_url(result)
+    return get_scraper_url_by(href, base_url, with_querystring)
 
 
 def get_resource_from_remote_by_request(

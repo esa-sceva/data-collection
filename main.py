@@ -1,8 +1,8 @@
 import json
+import os
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 
-from helper.constants import CONFIG_PATH
 from helper.database import init_db
 from helper.utils import read_json_file, discover_scrapers, run_scrapers, resume_upload_scrapers, resume_scrapers
 from service.analytics_manager import AnalyticsManager
@@ -84,7 +84,10 @@ def main(args):
     # first of all, remove the scraping.log file
     with open("logs/scraping.log", "w") as f:
         f.write("")
-    scraper_config = read_json_file(CONFIG_PATH)
+    config_path = os.getenv("CONFIG_PATH")
+    if not config_path:
+        raise Exception("CONFIG_PATH environment variable not set")
+    scraper_config = read_json_file(config_path)
 
     if args.resume_upload:
         resume_upload_scrapers(scrapers, scraper_config)

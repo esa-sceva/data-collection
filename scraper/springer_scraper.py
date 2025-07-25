@@ -24,6 +24,26 @@ class SpringerUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
     def config_model_type(self) -> Type[BaseMappedUrlConfig]:
         return BaseMappedUrlConfig
 
+    def __scrape_pagination_single_page(
+        self, source: BaseMappedUrlSource, counter: int, what: str, rule_href: callable, rule_class: callable = None
+    ) -> ResultSet | None:
+        try:
+            scraper = self._scrape_url(f"{source.url}{'&' if '?' in source.url else '?'}page={counter}")
+
+            # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
+            tags = (
+                scraper.find_all("a", href=rule_href)
+                if rule_class is None
+                else scraper.find_all("a", href=rule_href, class_=rule_class)
+            )
+            if len(tags) == 0:
+                return None
+
+            return tags
+        except Exception as e:
+            self._logger.error(f"Failed to process {what} {source.url}. Error: {e}")
+            return None
+
     def _scrape_journal(self, source: BaseMappedUrlSource) -> List[Tag] | None:
         self._logger.info(f"Processing Journal {source.url}")
 
@@ -31,26 +51,26 @@ class SpringerUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
         counter = 1
         article_tag_list = []
         while True:
-            try:
-                scraper = self._scrape_url(f"{source.url}?filterOpenAccess=false&page={counter}")
-
-                # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
-                tags = scraper.find_all("a", href=lambda href: href and "/article/" in href)
-                if len(tags) == 0:
-                    break
-
-                article_tag_list.extend(tags)
-                counter += 1
-            except Exception as e:
-                self._logger.error(f"Failed to process Journal {source.url}. Error: {e}")
+            tags = self.__scrape_pagination_single_page(
+                source,
+                counter,
+                "Journal",
+                lambda href: href and "/article/" in href,
+            )
+            if tags is None:
                 break
+
+            article_tag_list.extend(tags)
+            counter += 1
 
         # For each tag of articles previously collected, scrape the article
         pdf_tag_list = [
             tag
             for tag in (
                 self._scrape_article(BaseMappedUrlSource(
-                    url=get_scraped_url_by_bs_tag(tag, self._config_model.base_url), type=str(SourceType.ARTICLE)
+                    url=get_scraped_url_by_bs_tag(tag, self._config_model.base_url),
+                    type=str(SourceType.ARTICLE),
+                    has_pagination=source.has_pagination,
                 ))
                 for tag in article_tag_list
             )
@@ -60,14 +80,16 @@ class SpringerUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
         self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")
         return pdf_tag_list
 
-    def _scrape_issue_or_collection(self, source: BaseMappedUrlSource) -> ResultSet | None:
-        self._logger.info(f"Processing Issue / Collection {source.url}")
-
+    def __scrape_issue_or_collection_no_pagination(self, source: BaseMappedUrlSource) -> ResultSet | None:
         try:
             scraper = self._scrape_url(source.url)
 
             # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
-            if not (pdf_tag_list := scraper.find_all("a", href=lambda href: href and "/pdf/" in href)):
+            if not (pdf_tag_list := scraper.find_all(
+                    "a",
+                    href=lambda href: href and "/pdf/" in href,
+                    class_=lambda class_: class_ and "button" not in class_
+            )):
                 self._save_failure(source.url)
 
             self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")
@@ -75,6 +97,38 @@ class SpringerUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
         except Exception as e:
             self._log_and_save_failure(source.url, f"Failed to process Issue / Collection {source.url}. Error: {e}")
             return None
+
+    def __scrape_issue_or_collection_pagination(self, source: BaseMappedUrlSource) -> List[Tag]:
+        counter = 1
+        pdf_tag_list = []
+        while True:
+            tags = self.__scrape_pagination_single_page(
+                source,
+                counter,
+                "Issue / Collection",
+                lambda href: href and "/pdf/" in href,
+            )
+            if tags is None:
+                break
+
+            pdf_tag_list.extend(tags)
+            counter += 1
+
+        return pdf_tag_list
+
+    def _scrape_issue_or_collection(self, source: BaseMappedUrlSource) -> ResultSet | List[Tag] | None:
+        self._logger.info(f"Processing Issue / Collection {source.url}")
+
+        pdf_tag_list = (
+            self.__scrape_issue_or_collection_pagination(source)
+            if source.has_pagination
+            else self.__scrape_issue_or_collection_no_pagination(source)
+        )
+
+        if not source.base_url:
+            return pdf_tag_list
+
+        return [Tag(name="a", attrs={"href": get_scraped_url_by_bs_tag(tag, source.base_url)}) for tag in pdf_tag_list]
 
     def _scrape_article(self, source: BaseMappedUrlSource) -> Tag | None:
         self._logger.info(f"Processing Article {source.url}")

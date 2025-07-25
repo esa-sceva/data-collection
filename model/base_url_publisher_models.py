@@ -14,6 +14,8 @@ class SourceType(Enum):
 class BaseUrlPublisherSource(BaseModel):
     url: str
     type: str
+    has_pagination: bool = False
+    base_url: str | None = None
 
     @field_validator("type")
     def validate_type(cls, v):

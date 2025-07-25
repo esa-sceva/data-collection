@@ -37,6 +37,8 @@ INTERACTING_PROXY_HOST=brd.superproxy.io
 INTERACTING_PROXY_PORT=33335
 INTERACTING_PROXY_USER=<username>
 INTERACTING_PROXY_PASSWORD=<password>
+
+CONFIGURATION_FILE=
 ```
 
 The MinIO server is used to store the data and emulate a remote S3 bucket. The `AWS_URL` key must be set to the URL of
@@ -53,10 +55,11 @@ please populate all the keys in the `.env` file with the correct values.
 **Additional Note**: the `make down` command can be executed to stop the docker container.
 
 ## Configuration
-The configuration file is located in the `config` folder and is named `config.json`. The configuration file contains the parameters
-to be used in the pipeline. Each main key of the JSON file represents the configuration of a different scraper.
-The name of the key is the name of the scraper and the value is a dictionary containing the Pydantic model of the scraper
-configuration. For more examples, please take a look to the already implemented scrapers and their configurations.
+The configuration file is provided, in its relative path, by the `CONFIGURATION_FILE` key in the `.env` file.
+The configuration file contains the parameters to be used in the pipeline. Each main key of the JSON file represents the
+configuration of a different scraper. The name of the key is the name of the scraper and the value is a dictionary
+containing the Pydantic model of the scraper configuration. For more examples, please take a look to the already
+implemented scrapers and their configurations.
 
 ## Usage
 
@@ -135,7 +138,7 @@ implement the due methods / properties:
    - `config_model_type`: a `@property` returning the Pydantic model of the configuration of the scraper
    - `scrape`: a method that scrapes the website and returns the data
    - `post_process`: a method that post-processes the data scraped and returns a list of strings representing the URLs of the files to be downloaded / uploaded to the storage
-5. Enrich the `config/config.json` file with the JSON-formatted configuration of the new scraper. Please, pay attention
+5. Create the proper config file with the JSON-formatted configuration of the new scraper. Please, pay attention
 that the key of the JSON object must be the name of the scraper and the value must be the Pydantic model of the configuration. Specifically, the JSON object must contain the following
 keys:
    - `bucket_key`: the key of the bucket where the data will be stored
