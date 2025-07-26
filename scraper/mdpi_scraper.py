@@ -1,6 +1,6 @@
 import os
 from typing import Type, Dict, List
-from bs4 import Tag
+from bs4 import Tag, ResultSet
 
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import IterativePublisherScrapeIssueOutput
@@ -20,6 +20,7 @@ class MDPIScraper(BaseMappedPublisherScraper):
         return {
             "MDPIJournalsScraper": MDPIJournalsScraper,
             "MDPIGoogleSearchScraper": MDPIGoogleSearchScraper,
+            "MDPISearchScraper": MDPISearchScraper,
         }
 
 
@@ -134,3 +135,39 @@ class MDPIGoogleSearchScraper(BasePaginationPublisherScraper, BaseMappedSubScrap
         except Exception as e:
             self._log_and_save_failure(url, f"Failed to process URL {url}. Error: {e}")
             return None
+
+
+class MDPISearchScraper(BasePaginationPublisherScraper, BaseMappedSubScraper):
+    @property
+    def config_model_type(self) -> Type[BaseMappedPaginationConfig]:
+        return BaseMappedPaginationConfig
+
+    def _scrape_landing_page(self, landing_page_url: str, source_number: int) -> ResultSet | List[Tag] | None:
+        return self._scrape_pagination(landing_page_url, source_number)
+
+    def _scrape_page(self, url: str) -> ResultSet | List[Tag] | None:
+        try:
+            scraper = self._scrape_url(url)
+
+            pdf_tag_list = scraper.find_all(
+                "a",
+                href=lambda href: href and "/pdf" in href,
+                class_=lambda class_: class_ and ("UD_Listings_ArticlePDF" in class_ or "UD_ArticlePDF" in class_),
+            )
+            if not pdf_tag_list:
+                self._save_failure(url)
+
+            self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")
+            return pdf_tag_list
+        except Exception as e:
+            self._log_and_save_failure(url, f"Failed to process URL {url}. Error: {e}")
+            return None
+
+    def scrape(self) -> BasePaginationPublisherScrapeOutput | None:
+        pdf_tags = []
+        for idx, source in enumerate(self._config_model.sources):
+            pdf_tags.extend(self._scrape_landing_page(source.landing_page_url, idx + 1))
+
+        return {"MDPI Search": [
+            get_scraped_url_by_bs_tag(tag, self._config_model.base_url) for tag in pdf_tags
+        ]} if pdf_tags else None

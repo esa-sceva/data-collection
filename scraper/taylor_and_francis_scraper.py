@@ -1,17 +1,30 @@
-from typing import List, Type
+from typing import List, Type, Dict
 from bs4 import Tag
 
 from helper.utils import get_scraped_url_by_bs_tag
-from model.base_url_publisher_models import BaseUrlPublisherConfig
-from scraper.base_url_publisher_scraper import BaseUrlPublisherScraper, BaseUrlPublisherSource, SourceType
+from model.base_mapped_models import BaseMappedUrlConfig, BaseMappedUrlSource, BaseMappedPaginationConfig
+from model.base_pagination_publisher_models import BasePaginationPublisherScrapeOutput
+from scraper.base_mapped_publisher_scraper import BaseMappedPublisherScraper
+from scraper.base_pagination_publisher_scraper import BasePaginationPublisherScraper
+from scraper.base_scraper import BaseMappedSubScraper
+from scraper.base_url_publisher_scraper import BaseUrlPublisherScraper, SourceType
 
 
-class TaylorAndFrancisScraper(BaseUrlPublisherScraper):
+class TaylorAndFrancisScraper(BaseMappedPublisherScraper):
     @property
-    def config_model_type(self) -> Type[BaseUrlPublisherConfig]:
-        return BaseUrlPublisherConfig
+    def mapping(self) -> Dict[str, Type[BaseMappedSubScraper]]:
+        return {
+            "TaylorAndFrancisUrlScraper": TaylorAndFrancisUrlScraper,
+            "TaylorAndFrancisPaginationScraper": TaylorAndFrancisPaginationScraper,
+        }
 
-    def _scrape_journal(self, source: BaseUrlPublisherSource) -> List[Tag] | None:
+
+class TaylorAndFrancisUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
+    @property
+    def config_model_type(self) -> Type[BaseMappedUrlConfig]:
+        return BaseMappedUrlConfig
+
+    def _scrape_journal(self, source: BaseMappedUrlSource) -> List[Tag] | None:
         self._logger.info(f"Processing Journal {source.url}")
 
         try:
@@ -34,7 +47,7 @@ class TaylorAndFrancisScraper(BaseUrlPublisherScraper):
                 tag
                 for link in issues_links
                 if (tags := self._scrape_issue_or_collection(
-                    BaseUrlPublisherSource(url=link, type=str(SourceType.ISSUE_OR_COLLECTION))
+                    BaseMappedUrlSource(url=link, type=str(SourceType.ISSUE_OR_COLLECTION))
                 ))
                 for tag in tags
             ]
@@ -45,7 +58,7 @@ class TaylorAndFrancisScraper(BaseUrlPublisherScraper):
             self._log_and_save_failure(source.url, f"Failed to process Journal {source.url}. Error: {e}")
             return None
 
-    def _scrape_issue_or_collection(self, source: BaseUrlPublisherSource) -> List[Tag] | None:
+    def _scrape_issue_or_collection(self, source: BaseMappedUrlSource) -> List[Tag] | None:
         self._logger.info(f"Processing Issue / Collection {source.url}")
 
         try:
@@ -71,7 +84,7 @@ class TaylorAndFrancisScraper(BaseUrlPublisherScraper):
             self._log_and_save_failure(source.url, f"Failed to process Issue / Collection {source.url}. Error: {e}")
             return None
 
-    def _scrape_article(self, source: BaseUrlPublisherSource) -> Tag | None:
+    def _scrape_article(self, source: BaseMappedUrlSource) -> Tag | None:
         self._logger.info(f"Processing Article {source.url}")
 
         try:
@@ -84,4 +97,45 @@ class TaylorAndFrancisScraper(BaseUrlPublisherScraper):
             return tag
         except Exception as e:
             self._log_and_save_failure(source.url, f"Failed to process Article {source.url}. Error: {e}")
+            return None
+
+
+class TaylorAndFrancisPaginationScraper(BasePaginationPublisherScraper, BaseMappedSubScraper):
+    @property
+    def config_model_type(self) -> Type[BaseMappedPaginationConfig]:
+        return BaseMappedPaginationConfig
+
+    def scrape(self) -> BasePaginationPublisherScrapeOutput | None:
+        pdf_tags = []
+        for idx, source in enumerate(self._config_model.sources):
+            pdf_tags.extend(self._scrape_landing_page(source.landing_page_url, idx + 1))
+
+        return {"Taylor&Francis Search": [
+            get_scraped_url_by_bs_tag(tag, self._config_model.base_url) for tag in pdf_tags
+        ]} if pdf_tags else None
+
+    def _scrape_landing_page(self, landing_page_url: str, source_number: int) -> List[Tag] | None:
+        return self._scrape_pagination(landing_page_url, source_number, base_zero=True)
+
+    def _scrape_page(self, url: str) -> List[Tag] | None:
+        try:
+            scraper = self._scrape_url(url)
+
+            articles_links = [
+                get_scraped_url_by_bs_tag(tag, self._config_model.base_url).replace("/doi/full/", "/doi/pdf/")
+                for tag in scraper.find_all(
+                    "a",
+                    href=lambda href: href and "/doi/full/" in href,
+                    class_=lambda class_: class_ and "ref" in class_ and "nowrap" in class_,
+                )
+            ]
+            if not articles_links:
+                self._save_failure(url)
+
+            pdf_tag_list = [Tag(name="a", attrs={"href": link}) for link in articles_links]
+
+            self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")
+            return pdf_tag_list
+        except Exception as e:
+            self._log_and_save_failure(url, f"Failed to process URL {url}. Error: {e}")
             return None

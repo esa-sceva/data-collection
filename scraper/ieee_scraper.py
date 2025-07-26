@@ -54,7 +54,6 @@ class IEEEScraper(BasePaginationPublisherScraper, BaseSourceDownloadScraper):
             return None
 
     def _get_file_path_from_link(self, link: str) -> str | None:
-        file_path = None
         try:
             # visit the PDF link
             self._driver.cdp.open(link)
@@ -64,8 +63,7 @@ class IEEEScraper(BasePaginationPublisherScraper, BaseSourceDownloadScraper):
             pdf_url = scraper.find("iframe", src=True, sandbox=False).get("src")
             self._driver.cdp.open(pdf_url)
 
-            file_path = self._wait_end_download(".pdf")
+            return self._wait_end_download(".pdf")
         except Exception as e:
             self._logger.error(f"Error uploading to S3: {e}")
-        finally:
-            return file_path
+            return None

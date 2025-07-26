@@ -216,9 +216,244 @@
                             "type": "issue_or_collection",
                             "has_pagination": true,
                             "base_url": "https://earth-planets-space.springeropen.com"
+                        },
+                        {
+                            "url": "https://journalofbigdata.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://journalofbigdata.springeropen.com"
+                        },
+                        {
+                            "url": "https://journalofcloudcomputing.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://journalofcloudcomputing.springeropen.com"
+                        },
+                        {
+                            "url": "https://jesit.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://jesit.springeropen.com"
+                        },
+                        {
+                            "url": "https://satellite-navigation.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
+                            "type": "issue_or_collection",
+                            "has_pagination": true,
+                            "base_url": "https://satellite-navigation.springeropen.com"
                         }
                     ]
                 }
+            }
+        ]
+    },
+    "IEEEScraper": {
+        "bucket_key": "{main_folder}/ieee",
+        "base_url": "https://ieeexplore.ieee.org",
+        "cookie_selector": "button.osano-cm-accept-all",
+        "waited_tag": "div.List-results-items",
+        "sources": [
+            {
+                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=(%22SAIEE%20Africa%20Research%20Journal%22%20OR%20%22IEEE%20Journal%20of%20Indoor%20and%20Seamless%20Positioning%20and%20Navigation%22%20OR%20%22IEEE%20Journal%20of%20Microwaves%22%20OR%20%22IEEE%20Open%20Journal%20of%20Antennas%20and%20Propagation%22%20OR%20%22IEEE%20Open%20Journal%20of%20Signal%20Processing%22)&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
+                "page_size": 100,
+                "max_allowed_papers": 10000
+            }
+        ]
+    },
+    "FrontiersScraper": {
+        "bucket_key": "{main_folder}/frontiers",
+        "base_url": "https://www.frontiersin.org/",
+        "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+        "sources": [
+            {
+                "url": "https://www.frontiersin.org/journals/aerospace-engineering/articles?sort=3",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://www.frontiersin.org/journals/astronomy-and-space-sciences/articles?sort=3",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://www.frontiersin.org/journals/electronics/articles?sort=3",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://www.frontiersin.org/journals/signal-processing/articles?sort=3",
+                "type": "issue_or_collection"
+            },
+            {
+                "url": "https://www.frontiersin.org/journals/space-technologies/articles?sort=3",
+                "type": "issue_or_collection"
+            }
+        ]
+    },
+    "MDPIScraper": {
+        "bucket_key": "{main_folder}/mdpi",
+        "sources": [
+            {
+                "name": "MDPI Algorithms",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?journal=algorithms&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "MDPI Applied Sciences",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?journal=applsci&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "MDPI Applied System Innovation",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?journal=asi&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "MDPI Future Internet",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?journal=futureinternet&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "MDPI Journal of Cybersecurity and Privacy",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?q=&journal=jcp&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "MDPI Network",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?q=&journal=network&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            }
+            ,{
+                "name": "MDPI Signals",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?q=&journal=signals&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            }
+            ,{
+                "name": "MDPI Telecom",
+                "scraper": "MDPISearchScraper",
+                "config": {
+                    "base_url": "https://www.mdpi.com",
+                    "cookie_selector": "button[id=accept]",
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.mdpi.com/search?q=&journal=telecom&sort=pubdate&page_count={page_size}&page_no={page_number}"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "TaylorAndFrancisScraper": {
+        "bucket_key": "{main_folder}/taylor_and_francis",
+        "sources": [
+            {
+                "name": "Taylor&Francis Search Engine",
+                "scraper": "TaylorAndFrancisPaginationScraper",
+                "config": {
+                    "bucket_key": "{main_folder}/taylor_and_francis",
+                    "base_url": "https://www.tandfonline.com",
+                    "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+                    "request_with_proxy": true,
+                    "sources": [
+                        {
+                            "landing_page_url": "https://www.tandfonline.com/action/doSearch?AllField=&SeriesKey=taut20&startPage={page_number}&pageSize={page_size}",
+                            "page_size": 100
+                        },
+
+                        {
+                            "landing_page_url": "https://www.tandfonline.com/action/doSearch?AllField=&SeriesKey=tjit20&startPage={page_number}&pageSize={page_size}",
+                            "page_size": 100
+                        },
+                        {
+                            "landing_page_url": "https://www.tandfonline.com/action/doSearch?AllField=&SeriesKey=tmsi20&startPage={page_number}&pageSize={page_size}",
+                            "page_size": 100
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "ElsevierScraper": {
+        "bucket_key": "{main_folder}/elsevier",
+        "base_url": "https://www.sciencedirect.com",
+        "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+        "sources":[
+            {
+                "url": "https://www.sciencedirect.com/journal/array/issues",
+                "name": "Array",
+                "type": "journal"
+            },
+            {
+                "url": "https://www.sciencedirect.com/journal/euro-journal-on-computational-optimization/issues",
+                "name": "EURO Journal on Computational Optimization",
+                "type": "journal"
+            },
+            {
+                "url": "https://www.sciencedirect.com/journal/the-egyptian-journal-of-remote-sensing-and-space-sciences/issues",
+                "name": "The Egyptian Journal of Remote Sensing and Space Sciences",
+                "type": "journal"
+            },
+            {
+                "url": "https://www.sciencedirect.com/journal/ict-express/issues",
+                "name": "ICT Express",
+                "type": "journal"
+            },
+            {
+                "url": "https://www.sciencedirect.com/journal/machine-learning-with-applications/about/insights",
+                "name": "Machine Learning with Applications",
+                "type": "journal"
             }
         ]
     }

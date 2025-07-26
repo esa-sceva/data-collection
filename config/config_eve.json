@@ -591,29 +591,37 @@
     },
     "TaylorAndFrancisScraper": {
         "bucket_key": "{main_folder}/taylor_and_francis",
-        "base_url": "https://www.tandfonline.com",
-        "cookie_selector": "button[id=onetrust-accept-btn-handler]",
-        "request_with_proxy": true,
         "sources": [
             {
-                "url": "https://www.tandfonline.com/journals/tgda21/sections/earth-observations?startPage=0&pageSize=1000",
-                "type": "issue_or_collection"
-            },
-            {
-                "url": "https://www.tandfonline.com/loi/tbed20",
-                "type": "journal"
-            },
-            {
-                "url": "https://www.tandfonline.com/loi/tejr20",
-                "type": "journal"
-            },
-            {
-                "url": "https://www.tandfonline.com/loi/tres20",
-                "type": "journal"
-            },
-            {
-                "url": "https://www.tandfonline.com/loi/tgei20",
-                "type": "journal"
+                "name": "Taylor&Francis Journals / Collections",
+                "scraper": "TaylorAndFrancisUrlScraper",
+                "config": {
+                    "base_url": "https://www.tandfonline.com",
+                    "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+                    "request_with_proxy": true,
+                    "sources": [
+                        {
+                            "url": "https://www.tandfonline.com/journals/tgda21/sections/earth-observations?startPage=0&pageSize=1000",
+                            "type": "issue_or_collection"
+                        },
+                        {
+                            "url": "https://www.tandfonline.com/loi/tbed20",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://www.tandfonline.com/loi/tejr20",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://www.tandfonline.com/loi/tres20",
+                            "type": "journal"
+                        },
+                        {
+                            "url": "https://www.tandfonline.com/loi/tgei20",
+                            "type": "journal"
+                        }
+                    ]
+                }
             }
         ]
     },
