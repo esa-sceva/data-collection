@@ -1,13 +1,12 @@
-from copy import deepcopy
 from typing import List, Type
 from bs4 import ResultSet, Tag
 
 from helper.utils import get_scraped_url_by_bs_tag
-from model.base_url_publisher_models import BaseUrlPublisherConfig
+from model.base_url_publisher_models import BaseUrlPublisherConfig, SourceType
 from scraper.base_url_publisher_scraper import BaseUrlPublisherSource, BaseUrlPublisherScraper
 
 
-class IOPScraper(BaseUrlPublisherScraper):
+class AEMJournalScraper(BaseUrlPublisherScraper):
     @property
     def config_model_type(self) -> Type[BaseUrlPublisherConfig]:
         return BaseUrlPublisherConfig
@@ -16,27 +15,29 @@ class IOPScraper(BaseUrlPublisherScraper):
         self._logger.info(f"Processing Journal {source.url}")
 
         pdf_tag_list = []
-        current_source = deepcopy(source)
-        while True:
-            pdf_tag_issue_list = self._scrape_issue_or_collection(current_source)
-            if pdf_tag_issue_list is not None:
-                pdf_tag_list.extend(pdf_tag_issue_list)
+        try:
+            scraper = self._scrape_url(source.url)
 
-            # now, find the link to the next issue or collection
-            scraper = self._scrape_url(current_source.url)
-
-            next_issue_tag = scraper.find(
-                "a",
-                class_=lambda class_: class_ and "ml-1" in class_,
-                href=lambda href: href and "/issue/" in href,
+            issue_or_collection_tags = scraper.find_all(
+                "a", class_="title", href=lambda href: href and "/issue/view" in href
             )
-            if next_issue_tag:
-                next_issue_url = get_scraped_url_by_bs_tag(next_issue_tag, self._config_model.base_url)
-                current_source.url = next_issue_url
-                self._logger.info(f"Next issue URL: {current_source.url}")
-            else:
-                self._logger.info("No more issues or collections found.")
-                break
+            if not issue_or_collection_tags:
+                return None
+
+            # Iterate through each tag and extract the PDF links
+            for tag in issue_or_collection_tags:
+                pdf_tag_list.extend(self._scrape_issue_or_collection(
+                    BaseUrlPublisherSource(
+                        url=get_scraped_url_by_bs_tag(tag, self._config_model.base_url),
+                        type=str(SourceType.ISSUE_OR_COLLECTION),
+                    )
+                ))
+
+            self._logger.debug(f"Total PDF links found: {len(pdf_tag_list)}")
+            return pdf_tag_list
+        except Exception as e:
+            self._log_and_save_failure(source.url, f"Failed to process Journal {source.url}. Error: {e}")
+            return None
 
     def _scrape_issue_or_collection(self, source: BaseUrlPublisherSource) -> ResultSet | None:
         self._logger.info(f"Processing Issue / Collection {source.url}")
@@ -46,7 +47,9 @@ class IOPScraper(BaseUrlPublisherScraper):
 
             # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
             if not (pdf_tag_list := scraper.find_all(
-                    "a", href=lambda href: href and "/article/" in href and "/pdf" in href
+                    "a",
+                    class_=lambda class_: class_ and "pdf" in class_,
+                    href=lambda href: href and "/article/view" in href
             )):
                 self._save_failure(source.url)
 
