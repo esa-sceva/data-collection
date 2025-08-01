@@ -651,10 +651,10 @@
         "cookie_selector": "button.cc-banner__button-accept",
         "sources": [
             {
-                "landing_page_url": "https://www.nature.com/search?journal=commsphys&page={page_size}"
+                "landing_page_url": "https://www.nature.com/search?journal=commsphys&page={page_number}"
             },
             {
-                "landing_page_url": "https://www.nature.com/search?journal=npjqi&page={page_size}"
+                "landing_page_url": "https://www.nature.com/search?journal=npjqi&page={page_number}"
             }
         ]
     },
@@ -673,13 +673,6 @@
             }
         ]
     },
-
-
-
-
-
-
-
     "AEMJournalScraper": {
         "bucket_key": "{main_folder}/aemjournal",
         "base_url": "https://aemjournal.org",

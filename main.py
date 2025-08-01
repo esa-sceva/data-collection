@@ -84,9 +84,9 @@ def main(args):
     # first of all, remove the scraping.log file
     with open("logs/scraping.log", "w") as f:
         f.write("")
-    config_path = os.getenv("CONFIG_PATH")
+    config_path = os.getenv("CONFIGURATION_FILE")
     if not config_path:
-        raise Exception("CONFIG_PATH environment variable not set")
+        raise Exception("CONFIGURATION_FILE environment variable not set")
     scraper_config = read_json_file(config_path)
 
     if args.resume_upload:

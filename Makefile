@@ -2,7 +2,7 @@ PWD = $(shell pwd)
 
 LOCAL_DIR = $(PWD)/venv/bin
 PYTHON = $(LOCAL_DIR)/python
-PYTHON3 = python3.10
+PYTHON3 = python3
 
 args=
 # if dockerfile is not defined
@@ -23,12 +23,15 @@ down:  ## Stop docker containers
 stop:  ## Stop docker containers
 	docker compose ${docker-compose-files} stop
 
-sync-requirements: ## Update the local virtual environment as well as the container with the latest requirements.
+requirements: ## Update the local virtual environment as well as the container with the latest requirements.
 	docker exec -it $(shell docker ps -qf "name=app") /bin/sh -c "pip install --no-cache-dir -r requirements.txt"
 	$(PYTHON) -m pip install --no-cache-dir -r requirements.txt
+
+local:  ## Run the application locally
+	$(PYTHON) -m main ${args}
 
 run:  ## Run the application
 	docker exec -it $(shell docker ps -qf "name=app") /bin/sh -c "$(MAKE) runpod args='${args}'"
 
 runpod:  ## Run the application on the pod
-	python3 -m main ${args}
+	$(PYTHON3) -m main ${args}
