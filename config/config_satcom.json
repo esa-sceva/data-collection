@@ -774,5 +774,18 @@
                 "end_issue": 4
             }
         ]
+    },
+    "ElectromagneticScienceScraper": {
+        "bucket_key": "{main_folder}/emscience",
+        "journals": [
+            {
+                "url": "https://www.emscience.org/",
+                "name": "emscience",
+                "start_volume": 2023,
+                "end_volume": 2025,
+                "start_issue": 1,
+                "end_issue": 4
+            }
+        ]
     }
 }

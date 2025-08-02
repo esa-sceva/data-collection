@@ -54,7 +54,7 @@ class MDPIJournalsScraper(BaseIterativePublisherScraper, BaseMappedSubScraper):
             url (str): The issue URL.
 
         Returns:
-            BaseIterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
+            IterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
         """
         path, issue_num = os.path.split(url)
         _, volume_num = os.path.split(path)
