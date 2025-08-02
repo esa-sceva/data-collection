@@ -745,5 +745,21 @@
                 "page_size": 100
             }
         ]
+    },
+    "OxfordAcademicScraper": {
+        "bucket_key": "{main_folder}/oxford_academic",
+        "base_url": "https://academic.oup.com",
+        "cookie_selector": "button[id=accept-button]",
+        "request_with_proxy": true,
+        "journals": [
+            {
+                "url": "https://academic.oup.com/jcmc",
+                "name": "Journal of Computer-Mediated Communication",
+                "start_volume": 1,
+                "end_volume": 30,
+                "start_issue": 1,
+                "end_issue": 6
+            }
+        ]
     }
 }
