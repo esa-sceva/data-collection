@@ -787,5 +787,17 @@
                 "end_issue": 4
             }
         ]
+    },
+    "JTITScraper": {
+        "bucket_key": "{main_folder}/jtit",
+        "cookie_selector": "button[data-cookiefirst-action=accept]",
+        "journals": [
+            {
+                "url": "https://jtit.pl/jtit/",
+                "name": "jtit",
+                "start_issue": 1,
+                "end_issue": 110
+            }
+        ]
     }
 }
