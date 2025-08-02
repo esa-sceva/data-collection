@@ -27,7 +27,7 @@ class IOPScraper(BaseUrlPublisherScraper):
 
             next_issue_tag = scraper.find(
                 "a",
-                class_=lambda class_: class_ and "ml-1" in class_,
+                class_=lambda cls: cls and "ml-1" in cls,
                 href=lambda href: href and "/issue/" in href,
             )
             if next_issue_tag:

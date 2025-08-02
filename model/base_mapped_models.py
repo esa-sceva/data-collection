@@ -20,7 +20,7 @@ class BaseMappedBaseSource(BaseModel):
 
 class BaseMappedItemSource(BaseModel):
     href: str | None = None
-    class_: str | None = None
+    cls: str | None = None
 
 
 class BaseMappedIterativeJournal(BaseIterativePublisherJournal, BaseMappedItemSource):

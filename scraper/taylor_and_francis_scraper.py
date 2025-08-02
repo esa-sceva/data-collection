@@ -70,7 +70,7 @@ class TaylorAndFrancisUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
                 for tag in scraper.find_all(
                     "a",
                     href=lambda href: href and "/doi/full/" in href,
-                    class_=lambda class_: class_ and "ref" in class_ and "nowrap" in class_,
+                    class_=lambda cls: cls and "ref" in cls and "nowrap" in cls,
                 )
             ]
             if not articles_links:
@@ -126,7 +126,7 @@ class TaylorAndFrancisPaginationScraper(BasePaginationPublisherScraper, BaseMapp
                 for tag in scraper.find_all(
                     "a",
                     href=lambda href: href and "/doi/full/" in href,
-                    class_=lambda class_: class_ and "ref" in class_ and "nowrap" in class_,
+                    class_=lambda cls: cls and "ref" in cls and "nowrap" in cls,
                 )
             ]
             if not articles_links:

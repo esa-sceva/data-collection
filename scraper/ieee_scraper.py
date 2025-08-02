@@ -43,7 +43,7 @@ class IEEEScraper(BasePaginationPublisherScraper, BaseSourceDownloadScraper):
             if not (pdf_tag_list := scraper.find_all(
                 "a",
                 href=lambda href: href and "/stamp/stamp.jsp" in href,
-                class_=lambda class_: class_ and "u-flex-display-flex" in class_
+                class_=lambda cls: cls and "u-flex-display-flex" in cls
             )):
                 self._save_failure(url)
 

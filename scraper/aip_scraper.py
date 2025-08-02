@@ -1,12 +1,12 @@
 from typing import Type, List
-from bs4 import ResultSet, Tag
+from bs4 import Tag
 
 from helper.utils import get_scraped_url_by_bs_tag
-from model.base_pagination_publisher_models import BasePaginationPublisherScrapeOutput, BasePaginationPublisherConfig
+from model.base_pagination_publisher_models import BasePaginationPublisherConfig, BasePaginationPublisherScrapeOutput
 from scraper.base_pagination_publisher_scraper import BasePaginationPublisherScraper
 
 
-class AMSScraper(BasePaginationPublisherScraper):
+class AIPScraper(BasePaginationPublisherScraper):
     @property
     def config_model_type(self) -> Type[BasePaginationPublisherConfig]:
         return BasePaginationPublisherConfig
@@ -16,26 +16,20 @@ class AMSScraper(BasePaginationPublisherScraper):
         for idx, source in enumerate(self._config_model.sources):
             pdf_tags.extend(self._scrape_landing_page(source.landing_page_url, idx + 1))
 
-        return {"AMS": [
+        return {"AIP": [
             get_scraped_url_by_bs_tag(tag, self._config_model.base_url) for tag in pdf_tags
         ]} if pdf_tags else None
 
     def _scrape_landing_page(self, landing_page_url: str, source_number: int) -> List[Tag]:
         return self._scrape_pagination(landing_page_url, source_number)
 
-    def _scrape_page(self, url: str) -> ResultSet | List[Tag] | None:
+    def _scrape_page(self, url: str) -> List[Tag] | None:
         try:
             scraper = self._scrape_url(url)
 
-            results_block = scraper.find("div", class_=lambda cls: cls and "results-column" in cls)
-            if not results_block:
-                raise Exception(f"Results not found in URL {url}")
-
-            # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
+            # Now, visit each article link and find the PDF link
             if not (pdf_tag_list := scraper.find_all(
-                    "a",
-                    href=lambda href: href and "/downloadpdf/" in href,
-                    class_=lambda cls: cls and "pdf-download" in cls
+                    "a", href=lambda href: href and ".pdf" in href, class_=lambda cls: cls and "pdf" in cls
             )):
                 self._save_failure(url)
 
@@ -44,6 +38,3 @@ class AMSScraper(BasePaginationPublisherScraper):
         except Exception as e:
             self._log_and_save_failure(url, f"Failed to process URL {url}. Error: {e}")
             return None
-
-    def _is_valid_tag_list(self, page_tag_list: List | None) -> bool:
-        return page_tag_list is not None

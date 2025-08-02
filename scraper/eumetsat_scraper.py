@@ -46,7 +46,7 @@ class EUMETSATCaseStudiesScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
             if not (html_tag_list := scraper.find_all(
                 "a",
                 href=lambda href: href and "/resources/case-studies/" in href,
-                class_=lambda class_: class_ and "card-small" in class_ and "ng-star-inserted" in class_,
+                class_=lambda cls: cls and "card-small" in cls and "ng-star-inserted" in cls,
             )):
                 self._save_failure(source.url)
 

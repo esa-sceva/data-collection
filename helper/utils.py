@@ -428,10 +428,9 @@ def get_resource_from_remote_by_request(
             return response.content
         except Exception as e:
             retry_count += 1
-            if retry_count <= max_retries:
-                time.sleep(2 * retry_count)
-            else:
+            if retry_count > max_retries:
                 raise e
+            time.sleep(2 * retry_count)
 
     raise Exception(f"Failed to retrieve the content from {source_url}")
 

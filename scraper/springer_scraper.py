@@ -88,7 +88,7 @@ class SpringerUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
             if not (pdf_tag_list := scraper.find_all(
                     "a",
                     href=lambda href: href and "/pdf/" in href,
-                    class_=lambda class_: class_ and "button" not in class_
+                    class_=lambda cls: cls and "button" not in cls
             )):
                 self._save_failure(source.url)
 

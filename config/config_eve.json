@@ -914,7 +914,7 @@
                             "url": "https://earth.esa.int/eogateway/search?category=All+Categories",
                             "type": "issue_or_collection",
                             "href": "/eogateway/",
-                            "class_": "hover:underline"
+                            "cls": "hover:underline"
                         }
                     ]
                 }
@@ -940,7 +940,7 @@
                             "url": "https://www.eoportal.org/satellite-missions?Mission+type=EO",
                             "type": "issue_or_collection",
                             "href": "/satellite-missions/",
-                            "class_": "css-1wtmven"
+                            "cls": "css-1wtmven"
                         }
                     ]
                 }

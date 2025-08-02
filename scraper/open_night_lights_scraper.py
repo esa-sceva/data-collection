@@ -24,7 +24,7 @@ class OpenNightLightsScraper(BaseUrlPublisherScraper):
             if not (html_tag_list := scraper.find_all(
                 "a",
                 href=lambda href: href and "#" not in href,
-                class_=lambda class_: class_ and "reference" in class_ and "internal" in class_
+                class_=lambda cls: cls and "reference" in cls and "internal" in cls
             )):
                 self._save_failure(source.url)
 

@@ -48,7 +48,7 @@ class AEMJournalScraper(BaseUrlPublisherScraper):
             # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
             if not (pdf_tag_list := scraper.find_all(
                     "a",
-                    class_=lambda class_: class_ and "pdf" in class_,
+                    class_=lambda cls: cls and "pdf" in cls,
                     href=lambda href: href and "/article/view" in href
             )):
                 self._save_failure(source.url)

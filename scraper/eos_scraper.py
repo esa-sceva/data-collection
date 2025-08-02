@@ -23,7 +23,7 @@ class EOSScraper(BaseUrlPublisherScraper):
             if not (pdf_tag_list := scraper.find_all(
                 "a",
                 href=lambda href: href and "/wp-content/uploads/" in href and ".pdf" in href,
-                class_=lambda class_: class_ and "wp-element-button" in class_,
+                class_=lambda cls: cls and "wp-element-button" in cls,
             )):
                 self._save_failure(source.url)
 

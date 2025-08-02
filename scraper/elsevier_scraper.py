@@ -127,7 +127,7 @@ class ElsevierScraper(BaseSourceDownloadScraper):
             # check for the presence of tags "a", class "pdf-download" with attribute `href` containing ".pdf"
             pdf_tags = scraper.find_all(
                 "a",
-                class_=lambda class_: class_ and "pdf-download" in class_,
+                class_=lambda cls: cls and "pdf-download" in cls,
                 href=lambda href: href and ".pdf" in href
             )
             # if no PDF tag exists, try with the next issue since no PDF can be downloaded from the current one
@@ -151,12 +151,10 @@ class ElsevierScraper(BaseSourceDownloadScraper):
         except:
             return None
 
-        file_path = None
         try:
             # visit the PDF link
             self._driver.cdp.open(link)
-            file_path = self._wait_end_download(pid)
+            return self._wait_end_download(pid)
         except Exception as e:
             self._logger.error(f"Error uploading to S3: {e}")
-        finally:
-            return file_path
+            return None

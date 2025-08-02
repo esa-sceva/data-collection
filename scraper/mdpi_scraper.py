@@ -111,7 +111,7 @@ class MDPIGoogleSearchScraper(BasePaginationPublisherScraper, BaseMappedSubScrap
             tags = self._get_parsed_page_source().find_all(
                 "a",
                 href=True,
-                class_=lambda class_: class_ and ("UD_Listings_ArticlePDF" in class_ or "UD_ArticlePDF" in class_),
+                class_=lambda cls: cls and ("UD_Listings_ArticlePDF" in cls or "UD_ArticlePDF" in cls),
             )
             self._logger.debug(f"MDPI URL {mdpi_url} processed; PDF links found: {len(tags)}")
             return tags
@@ -152,7 +152,7 @@ class MDPISearchScraper(BasePaginationPublisherScraper, BaseMappedSubScraper):
             pdf_tag_list = scraper.find_all(
                 "a",
                 href=lambda href: href and "/pdf" in href,
-                class_=lambda class_: class_ and ("UD_Listings_ArticlePDF" in class_ or "UD_ArticlePDF" in class_),
+                class_=lambda cls: cls and ("UD_Listings_ArticlePDF" in cls or "UD_ArticlePDF" in cls),
             )
             if not pdf_tag_list:
                 self._save_failure(url)

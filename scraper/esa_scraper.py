@@ -30,8 +30,8 @@ class ESAUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
             href_fnc = lambda href: href and source.href in href and "##" not in href
 
             # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
-            if source.class_:
-                pdf_tag_list = scraper.find_all("a", href=href_fnc, class_=source.class_)
+            if source.cls:
+                pdf_tag_list = scraper.find_all("a", href=href_fnc, class_=source.cls)
             else:
                 pdf_tag_list = scraper.find_all("a", href=href_fnc)
             self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")

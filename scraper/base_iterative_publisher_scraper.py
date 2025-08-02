@@ -8,6 +8,9 @@ from model.base_iterative_publisher_models import (
     IterativePublisherScrapeVolumeOutput,
     IterativePublisherScrapeIssueOutput,
     IterativePublisherScrapeOutput,
+    BaseIterativeIssuePublisherJournal,
+    IterativeIssuePublisherScrapeJournalOutput,
+    IterativeIssuePublisherScrapeOutput,
 )
 from scraper.base_scraper import BaseScraper
 
@@ -46,21 +49,6 @@ class BaseIterativePublisherScraper(BaseScraper):
             for issue_link in issues_links
         ]))
 
-    def _build_journal_links(self, journal: BaseIterativePublisherJournal) -> IterativePublisherScrapeJournalOutput:
-        return {
-            volume_num: self._scrape_volume(journal, volume_num)
-            for volume_num in range(journal.start_volume, journal.end_volume + 1)
-        }
-
-    def _build_volume_links(
-        self, journal: BaseIterativePublisherJournal, volume_num: int
-    ) -> IterativePublisherScrapeVolumeOutput:
-        return {
-            issue_num: scrape_issue_result
-            for issue_num in range(journal.start_issue, journal.end_issue + 1)
-            if (scrape_issue_result := self._scrape_issue(journal, volume_num, issue_num))
-        }
-
     def _scrape_journal(self, journal: BaseIterativePublisherJournal) -> IterativePublisherScrapeJournalOutput:
         """
         Scrape all volumes of a journal. This method must be implemented in the derived class.
@@ -73,6 +61,12 @@ class BaseIterativePublisherScraper(BaseScraper):
         """
         self._logger.info(f"Processing Journal {journal.name}")
         return self._build_journal_links(journal)
+
+    def _build_journal_links(self, journal: BaseIterativePublisherJournal) -> IterativePublisherScrapeJournalOutput:
+        return {
+            volume_num: self._scrape_volume(journal, volume_num)
+            for volume_num in range(journal.start_volume, journal.end_volume + 1)
+        }
 
     def _scrape_volume(
         self, journal: BaseIterativePublisherJournal, volume_num: int
@@ -89,6 +83,15 @@ class BaseIterativePublisherScraper(BaseScraper):
         """
         self._logger.info(f"Processing Volume {volume_num}")
         return self._build_volume_links(journal, volume_num)
+
+    def _build_volume_links(
+        self, journal: BaseIterativePublisherJournal, volume_num: int
+    ) -> IterativePublisherScrapeVolumeOutput:
+        return {
+            issue_num: scrape_issue_result
+            for issue_num in range(journal.start_issue, journal.end_issue + 1)
+            if (scrape_issue_result := self._scrape_issue(journal, volume_num, issue_num))
+        }
 
     @abstractmethod
     def _scrape_issue(
@@ -178,3 +181,103 @@ class BaseIterativeWithConstraintPublisherScraper(BaseIterativePublisherScraper,
 
     def _has_valid_results_from_issue(self, results: IterativePublisherScrapeIssueOutput | None) -> bool:
         return bool(results)
+
+
+class BaseIterativeIssuesPublisherScraper(BaseScraper):
+    def scrape(self) -> IterativeIssuePublisherScrapeOutput | None:
+        """
+        Scrape the journals for PDF links.
+
+        Returns:
+            IterativeIssuePublisherScrapeOutput | None: A dictionary containing the PDF links, or None if no link was found.
+        """
+        links = {}
+
+        for journal in self._config_model.journals:
+            if scraped_tags := self._scrape_journal(journal):
+                links[self.journal_identifier(journal)] = scraped_tags
+
+        return links if links else None
+
+    def post_process(self, scrape_output: IterativeIssuePublisherScrapeOutput) -> List[str]:
+        """
+        Extract the PDF links from the dictionary.
+
+        Args:
+            scrape_output: A dictionary containing the PDF links.
+
+        Returns:
+            List[str]: A list of strings containing the PDF links
+        """
+        return list(set([
+            issue_link
+            for journal_links in scrape_output.values()
+            for issues_links in journal_links.values()
+            for issue_link in issues_links
+        ]))
+
+    def _scrape_journal(
+        self, journal: BaseIterativeIssuePublisherJournal
+    ) -> IterativeIssuePublisherScrapeJournalOutput:
+        """
+        Scrape all volumes of a journal. This method must be implemented in the derived class.
+
+        Args:
+            journal (BaseIterativeIssuePublisherJournal): The journal to scrape.
+
+        Returns:
+            IterativeIssuePublisherScrapeJournalOutput: A dictionary containing the PDF links.
+        """
+        self._logger.info(f"Processing Journal {journal.name}")
+        return self._build_journal_links(journal)
+
+    def _build_journal_links(
+        self, journal: BaseIterativeIssuePublisherJournal
+    ) -> IterativeIssuePublisherScrapeJournalOutput:
+        result = {}
+        for issue_num in range(journal.start_issue, journal.end_issue + 1):
+            if issue_links := self._scrape_issue(journal, issue_num):
+                result[issue_num] = issue_links
+        return result
+
+    @abstractmethod
+    def _scrape_issue(
+        self, journal: BaseIterativeIssuePublisherJournal, issue_num: int
+    ) -> IterativePublisherScrapeIssueOutput | None:
+        """
+        Scrape the issue URL for PDF links. This method must be implemented in the derived class.
+
+        Args:
+            journal (BaseIterativeIssuePublisherJournal): The journal to scrape.
+            issue_num (int): The issue number.
+
+        Returns:
+            IterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
+        """
+        pass
+
+    @abstractmethod
+    def _scrape_article(self, article_url: str) -> str | None:
+        """
+        Scrape a single article.
+
+        Args:
+            article_url (str): The article links to scrape.
+
+        Returns:
+            str | None: The string containing the PDF link.
+        """
+        pass
+
+    @abstractmethod
+    def journal_identifier(self, model: BaseIterativeIssuePublisherJournal) -> str:
+        """
+        Return the journal identifier. This method must be implemented in the derived class.
+
+        Args:
+            model (BaseIterativeIssuePublisherJournal): The configuration model.
+
+        Returns:
+            str: The journal identifier
+        """
+        pass

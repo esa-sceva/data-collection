@@ -4,13 +4,20 @@ from pydantic import BaseModel
 from model.base_models import BaseConfig
 
 
-class BaseIterativePublisherJournal(BaseModel):
+class BaseIterativeIssuePublisherJournal(BaseModel):
     url: str
     name: str
-    start_volume: int | None = 1
-    end_volume: int | None = 30
     start_issue: int | None = 1
     end_issue: int | None = 30
+
+
+class BaseIterativeIssuePublisherConfig(BaseConfig):
+    journals: List[BaseIterativeIssuePublisherJournal]
+
+
+class BaseIterativePublisherJournal(BaseIterativeIssuePublisherJournal):
+    start_volume: int | None = 1
+    end_volume: int | None = 30
 
 
 class BaseIterativePublisherConfig(BaseConfig):
@@ -26,7 +33,10 @@ class BaseIterativeWithConstraintPublisherConfig(BaseConfig):
     journals: List[BaseIterativeWithConstraintPublisherJournal]
 
 
-IterativePublisherScrapeOutput: TypeAlias = Dict[str, Dict[int, Dict[int, List[str]]]]
-IterativePublisherScrapeJournalOutput: TypeAlias = Dict[int, Dict[int, List[str]]]
-IterativePublisherScrapeVolumeOutput: TypeAlias = Dict[int, List[str]]
 IterativePublisherScrapeIssueOutput: TypeAlias = List[str]
+IterativePublisherScrapeVolumeOutput: TypeAlias = Dict[int, IterativePublisherScrapeIssueOutput]
+IterativePublisherScrapeJournalOutput: TypeAlias = Dict[int, IterativePublisherScrapeVolumeOutput]
+IterativePublisherScrapeOutput: TypeAlias = Dict[str, IterativePublisherScrapeJournalOutput]
+
+IterativeIssuePublisherScrapeJournalOutput: TypeAlias = IterativePublisherScrapeVolumeOutput
+IterativeIssuePublisherScrapeOutput: TypeAlias = Dict[str, IterativeIssuePublisherScrapeJournalOutput]

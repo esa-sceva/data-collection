@@ -608,7 +608,7 @@
         "bucket_key": "{main_folder}/eudl",
         "journals": [
             {
-                "url": "https://eudl.eu/journal/inis",
+                "url": "https://eudl.eu/issue/inis",
                 "name": "inis",
                 "start_volume": 1,
                 "end_volume": 16,
@@ -616,7 +616,7 @@
                 "end_issue": 34
             },
             {
-                "url": "https://eudl.eu/journal/sis",
+                "url": "https://eudl.eu/issue/sis",
                 "name": "sis",
                 "start_volume": 1,
                 "end_volume": 16,
@@ -624,7 +624,7 @@
                 "end_issue": 34
             },
             {
-                "url": "https://eudl.eu/journal/mca",
+                "url": "https://eudl.eu/issue/mca",
                 "name": "mca",
                 "start_volume": 1,
                 "end_volume": 11,
@@ -680,6 +680,69 @@
             {
                 "url": "https://aemjournal.org/index.php/AEM/issue/archive",
                 "type": "journal"
+            }
+        ]
+    },
+    "RigaTechnicalUniversityScraper": {
+        "bucket_key": "{main_folder}/rtu",
+        "journals": [
+            {
+                "url": "https://csimq-journals.rtu.lv/csimq/",
+                "name": "csimq",
+                "start_issue": 1,
+                "end_issue": 57
+            },
+            {
+                "url": "https://ecce-journals.rtu.lv/ecce/",
+                "name": "ecce",
+                "start_issue": 2,
+                "end_issue": 34
+            }
+        ]
+    },
+    "AIPScraper": {
+        "bucket_key": "{main_folder}/aip",
+        "base_url": "https://pubs.aip.org/",
+        "cookie_selector": "button.osano-cm-accept-all",
+        "sources": [
+            {
+                "landing_page_url": "https://pubs.aip.org/aip/adv/search-results?f_ContentType=Journal+Articles&fl_SiteID=1000003&page={page_number}"
+            }
+        ]
+    },
+    "EmeraldScraper": {
+        "bucket_key": "{main_folder}/emerald",
+        "base_url": "https://www.emerald.com/",
+        "cookie_selector": "button.onetrust-accept-btn-handler",
+        "sources": [
+            {
+                "landing_page_url": "https://www.emerald.com/search-results?f_JournalDisplayName=Applied+Computing+and+Informatics&fl_JournalID=1000007&fl_SiteID=1&page={page_number}&f_ContentType=Journal+Articles"
+            }
+        ]
+    },
+    "NationalAcademySciencesUkraineScraper": {
+        "bucket_key": "{main_folder}/nas_ua",
+        "journals": [
+            {
+                "url": "http://rpra-journal.org.ua/index.php/ra/",
+                "name": "rpra",
+                "start_issue": 1,
+                "end_issue": 130
+            }
+        ]
+    },
+    "SciencePartnerJournalScraper": {
+        "bucket_key": "{main_folder}/spj",
+        "base_url": "https://spj.science.org/",
+        "cookie_selector": "div[id=wb_cookie_setting_ok]",
+        "sources": [
+            {
+                "landing_page_url": "https://spj.science.org/index/adi?pageSize={page_size}&startPage={page_number}",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://spj.science.org/index/space?pageSize={page_size}&startPage={page_number}",
+                "page_size": 100
             }
         ]
     }

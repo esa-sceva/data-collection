@@ -105,7 +105,7 @@ class ISPRSScraper(BaseScraper):
             if (pdf_tag := scraper.find(
                 "a",
                 href=lambda href: href and ".pdf" in href,
-                class_=lambda class_: class_ and "pdf-icon" in class_
+                class_=lambda cls: cls and "pdf-icon" in cls
             )):
                 return pdf_tag.get("href")
 

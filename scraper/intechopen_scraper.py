@@ -42,14 +42,14 @@ class IntechOpenScraper(BasePaginationPublisherScraper):
                 return []
             # get the iframe source, which is the real PDF link to download, if it exists
             if iframe := scraper_.find(
-                "iframe", src=True, class_=lambda class_: class_ and "pdf-object" in class_
+                "iframe", src=True, class_=lambda cls: cls and "pdf-object" in cls
             ):
                 pdf_url = iframe.get("src")
                 # from pdf_url, get the `file` parameter of the query string
                 return [Tag(name="a", attrs={"href": parse_qs(urlparse(pdf_url).query)["file"][0]})]
             # check whether the visited page contains `a` tags with `class` attribute containing "chapter__title"
             chapter_tags = scraper_.find_all(
-                "a", class_=lambda class_: class_ and "chapter__title" in class_
+                "a", class_=lambda cls: cls and "chapter__title" in cls
             )
             result = []
             for chapter_tag in chapter_tags:
