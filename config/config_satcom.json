@@ -761,5 +761,18 @@
                 "end_issue": 6
             }
         ]
+    },
+    "RadioEngCZScraper": {
+        "bucket_key": "{main_folder}/radioeng_cz",
+        "journals": [
+            {
+                "url": "https://www.radioeng.cz/",
+                "name": "radioeng",
+                "start_volume": 1992,
+                "end_volume": 2025,
+                "start_issue": 1,
+                "end_issue": 4
+            }
+        ]
     }
 }

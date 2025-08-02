@@ -76,6 +76,7 @@ class RigaTechnicalUniversityScraper(BaseIterativeIssuesPublisherScraper):
         self._logger.info(f"Scraping URL: {link}")
 
         if "Article" in failure.message:
-            return self._scrape_article(link) or []
+            result = self._scrape_article(link)
+            return [result] or []
 
         return self.__scrape_issue_url(link) or []
