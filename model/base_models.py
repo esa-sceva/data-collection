@@ -9,7 +9,7 @@ class ReadMoreButton(BaseModel):
 
 class Config(ABC, BaseModel):
     bucket_key: str
-    files_by_request: bool | None = True
+    files_by_request: bool | None = True  # Indicates whether the downloader should download or scrape the final sources
 
 
 class BaseConfig(Config, ABC):
@@ -18,4 +18,4 @@ class BaseConfig(Config, ABC):
     read_more_button: ReadMoreButton | None = None
     loading_tag: str | None = None  # The tag that indicates that the page is still loading
     waited_tag: str | None = None  # The tag that indicates that the page has loaded
-    request_with_proxy: bool = False
+    request_with_proxy: bool = False  # Indicates whether the downloading request should be made with a proxy (only for download, not scrape)

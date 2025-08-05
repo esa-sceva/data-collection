@@ -727,7 +727,8 @@
         "cookie_selector": "button.osano-cm-accept-all",
         "sources": [
             {
-                "landing_page_url": "https://pubs.aip.org/aip/adv/search-results?f_ContentType=Journal+Articles&fl_SiteID=1000003&page={page_number}"
+                "landing_page_url": "https://pubs.aip.org/aip/adv/search-results?f_ContentType=Journal+Articles&fl_SiteID=1000003&page={page_number}&page_size={page_size}",
+                "page_size": 100
             }
         ]
     },
@@ -737,7 +738,8 @@
         "cookie_selector": "button.onetrust-accept-btn-handler",
         "sources": [
             {
-                "landing_page_url": "https://www.emerald.com/search-results?f_JournalDisplayName=Applied+Computing+and+Informatics&fl_JournalID=1000007&fl_SiteID=1&page={page_number}&f_ContentType=Journal+Articles"
+                "landing_page_url": "https://www.emerald.com/search-results?f_JournalDisplayName=Applied+Computing+and+Informatics&fl_JournalID=1000007&fl_SiteID=1&page={page_number}&f_ContentType=Journal+Articles&page_size={page_size}",
+                "page_size": 100
             }
         ]
     },
@@ -771,7 +773,7 @@
         "bucket_key": "{main_folder}/oxford_academic",
         "base_url": "https://academic.oup.com",
         "cookie_selector": "button[id=accept-button]",
-        "request_with_proxy": true,
+        "files_by_request": false,
         "journals": [
             {
                 "url": "https://academic.oup.com/jcmc",
@@ -785,6 +787,7 @@
     },
     "RadioEngCZScraper": {
         "bucket_key": "{main_folder}/radioeng_cz",
+        "base_url": "https://www.radioeng.cz",
         "journals": [
             {
                 "url": "https://www.radioeng.cz/",

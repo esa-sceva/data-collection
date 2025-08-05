@@ -60,9 +60,8 @@ class OxfordAcademicScraper(BaseIterativePublisherScraper):
                 ):
                     articles_links.append(get_scraped_url_by_web_element(a_tag, self._config_model.base_url))
 
-            pdf_links = [
-                pdf_link for pdf_link in map(lambda link: self._scrape_article(link), articles_links) if pdf_link
-            ]
+            callback = lambda link: self._scrape_article(link) if self._config_model.files_by_request else link
+            pdf_links = [pdf_link for pdf_link in map(callback, articles_links) if pdf_link]
 
             self._logger.debug(f"PDF links found: {len(pdf_links)}")
             return pdf_links

@@ -35,7 +35,7 @@ class NationalAcademySciencesUkraineScraper(BaseIterativeIssuesPublisherScraper)
             tags = scraper.find_all(
                 "a",
                 class_=lambda cls: cls and "file" in cls,
-                href=lambda href: href and "/pdf" in href
+                href=lambda href: href and "/article/view/" in href
             )
 
             pdf_links = [
