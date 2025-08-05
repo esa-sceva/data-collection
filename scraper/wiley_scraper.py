@@ -38,14 +38,22 @@ class WileyScraper(BasePaginationPublisherScraper):
             except:
                 tags = []
 
-            if not (articles_links := [
-                get_scraped_url_by_web_element(a_tag, self.__source.base_url).replace("/doi/", "/doi/pdfdirect/")
-                for tag in tags
-                if (ancestor := get_ancestor(tag, "div.item__body"))
-                   and (a_tag := ancestor.query_selector("a.publication_title.visitable"))
-                   and (href := a_tag.get_attribute("href"))
-                   and "/doi/" in href
-            ]):
+            articles_links = []
+            for i_, tag in enumerate(tags):
+                self._logger.debug(f"Processing tag {i_ + 1}/{len(tags)}")
+
+                if (
+                        (ancestor := get_ancestor(tag, "div.item__body"))
+                        and (a_tag := ancestor.query_selector("a.publication_title.visitable"))
+                        and (href := a_tag.get_attribute("href"))
+                        and "/doi/" in href
+                ):
+                    articles_links.append(
+                        get_scraped_url_by_web_element(a_tag, self.__source.base_url)
+                        .replace("/doi/", "/doi/pdfdirect/")
+                    )
+
+            if not articles_links:
                 self._save_failure(url)
 
             self._logger.debug(f"PDF links found: {len(articles_links)}")

@@ -18,10 +18,10 @@ up:  ## Start docker containers
 	docker compose ${docker-compose-files} up -d ${args}
 
 down:  ## Stop docker containers
-	docker compose ${docker-compose-files} down
+	docker compose ${docker-compose-files} down ${args}
 
 stop:  ## Stop docker containers
-	docker compose ${docker-compose-files} stop
+	docker compose ${docker-compose-files} stop ${args}
 
 requirements: ## Update the local virtual environment as well as the container with the latest requirements.
 	docker exec -it $(shell docker ps -qf "name=app") /bin/sh -c "pip install --no-cache-dir -r requirements.txt"
