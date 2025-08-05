@@ -46,20 +46,25 @@ class ElectromagneticScienceScraper(BaseIterativePublisherScraper):
 
         parsed_url = urlparse(url)
 
+        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
         path = parsed_url.path.lstrip("/")
-        base_url, _, _, volume_num, issue_num = path.split("/")
+        _, _, volume_num, issue_num = path.split("/")
 
         try:
             scraper = self._scrape_url(url)
 
             # Get all PDF links using Selenium to scroll and handle cookie popup once
             # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
-            tags = scraper.find_all("a", href=lambda href: href and "javascript:void" in href)
+            tags = scraper.find_all(
+            "a",
+                href=lambda href: href and "javascript:void" in href,
+                attrs={"onclick": lambda x: x and "downloadpdf" in x}
+            )
 
             pdf_links = [
                 os.path.join(
                     base_url, "article", "exportPdf"
-                ) + "?id=" + tag.get("onclick").replace("downloadpdf('", "").replace("')", "") + "?language=en"
+                ) + "?language=en&id=" + tag.get("onclick").replace("downloadpdf('", "").replace("')", "")
                 for tag in tags
             ]
             if not pdf_links:

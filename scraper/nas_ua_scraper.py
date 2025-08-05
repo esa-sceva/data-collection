@@ -1,5 +1,6 @@
 import os
 from typing import Type, List
+from urllib.parse import urlparse
 
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import (
@@ -25,7 +26,12 @@ class NationalAcademySciencesUkraineScraper(BaseIterativeIssuesPublisherScraper)
         return self.__scrape_issue_url(issue_url)
 
     def __scrape_issue_url(self, issue_url: str) -> IterativePublisherScrapeIssueOutput | None:
-        _, issue_num = os.path.split(issue_url)
+        parsed_url = urlparse(issue_url)
+
+        path = parsed_url.path.lstrip("/")
+        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+
+        issue_num = path[-1]
 
         try:
             scraper = self._scrape_url(issue_url)
@@ -39,7 +45,7 @@ class NationalAcademySciencesUkraineScraper(BaseIterativeIssuesPublisherScraper)
             )
 
             pdf_links = [
-                get_scraped_url_by_bs_tag(tag, self._config_model.base_url).replace("/view/", "/download/")
+                get_scraped_url_by_bs_tag(tag, base_url).replace("/view/", "/download/")
                 for tag in tags
             ]
 

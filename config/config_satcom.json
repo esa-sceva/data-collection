@@ -626,7 +626,6 @@
     },
     "EUDLScraper": {
         "bucket_key": "{main_folder}/eudl",
-        "base_url": "https://eudl.eu",
         "journals": [
             {
                 "url": "https://eudl.eu/issue/inis",
@@ -787,7 +786,6 @@
     },
     "RadioEngCZScraper": {
         "bucket_key": "{main_folder}/radioeng_cz",
-        "base_url": "https://www.radioeng.cz",
         "journals": [
             {
                 "url": "https://www.radioeng.cz/",
@@ -819,8 +817,8 @@
             {
                 "url": "https://jtit.pl/jtit/",
                 "name": "jtit",
-                "start_issue": 1,
-                "end_issue": 110
+                "start_issue": 2,
+                "end_issue": 106
             }
         ]
     }

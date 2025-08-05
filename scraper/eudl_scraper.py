@@ -1,5 +1,6 @@
 import os
 from typing import Type, List
+from urllib.parse import urlparse
 
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import IterativePublisherScrapeIssueOutput
@@ -40,8 +41,12 @@ class EUDLScraper(BaseIterativePublisherScraper):
         Returns:
             IterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
         """
-        path, issue_num = os.path.split(url)
-        _, volume_num = os.path.split(path)
+
+        parsed_url = urlparse(url)
+
+        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+        path = parsed_url.path.lstrip("/")
+        _, _, volume_num, issue_num = path.split("/")
 
         try:
             scraper = self._scrape_url(url)
@@ -51,7 +56,7 @@ class EUDLScraper(BaseIterativePublisherScraper):
             tags = scraper.find_all("a", href=lambda href: href and "/doi/" in href)
 
             pdf_links = [
-                get_scraped_url_by_bs_tag(tag, self._config_model.base_url).replace("/doi/", "/pdf/")
+                get_scraped_url_by_bs_tag(tag, base_url).replace("/doi/", "/pdf/")
                 for tag in tags
             ]
             if not pdf_links:

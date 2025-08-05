@@ -1,5 +1,6 @@
 import os
 from typing import Type, List
+from urllib.parse import urlparse
 
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import IterativePublisherScrapeIssueOutput
@@ -40,9 +41,13 @@ class RadioEngCZScraper(BaseIterativePublisherScraper):
         Returns:
             IterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
         """
-        path, volume_issue_num = os.path.split(url)
-        volume_num, issue_num = volume_issue_num.split("-")
+        parsed_url = urlparse(url)
+
+        path = parsed_url.path.lstrip("/")
+        volume_num, issue_num = path.split("/")
         issue_num = issue_num.replace(".htm", "")
+
+        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
 
         try:
             scraper = self._scrape_url(url)
@@ -51,10 +56,7 @@ class RadioEngCZScraper(BaseIterativePublisherScraper):
             # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all("a", href=lambda href: href and "fulltexts" in href and ".pdf" in href)
 
-            pdf_links = [
-                get_scraped_url_by_bs_tag(tag, self._config_model.base_url)
-                for tag in tags
-            ]
+            pdf_links = [get_scraped_url_by_bs_tag(tag, base_url) for tag in tags]
             if not pdf_links:
                 self._save_failure(url)
 

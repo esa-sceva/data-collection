@@ -1,5 +1,7 @@
 import os
+from abc import ABC
 from typing import Type, List
+from urllib.parse import urlparse
 
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import (
@@ -11,10 +13,28 @@ from model.sql_models import ScraperFailure
 from scraper.base_iterative_publisher_scraper import BaseIterativeIssuesPublisherScraper
 
 
-class RigaTechnicalUniversityScraper(BaseIterativeIssuesPublisherScraper):
+class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
     @property
     def config_model_type(self) -> Type[BaseIterativeIssuePublisherConfig]:
         return BaseIterativeIssuePublisherConfig
+
+    def _get_issue_num(self, issue_url: str) -> str:
+        """
+        Extract the issue number from the issue URL.
+
+        Args:
+            issue_url (str): The URL of the issue.
+
+        Returns:
+            int: The issue number extracted from the URL.
+        """
+        parsed_url = urlparse(issue_url)
+        path = parsed_url.path.lstrip("/")
+        return path[-1]
+
+    def _get_base_url(self, url: str) -> str:
+        parsed_url = urlparse(url)
+        return f"{parsed_url.scheme}://{parsed_url.netloc}"
 
     def _scrape_issue(
         self, journal: BaseIterativeIssuePublisherJournal, issue_num: int
@@ -25,13 +45,12 @@ class RigaTechnicalUniversityScraper(BaseIterativeIssuesPublisherScraper):
         return self.__scrape_issue_url(issue_url)
 
     def __scrape_issue_url(self, issue_url: str) -> IterativePublisherScrapeIssueOutput | None:
-        _, issue_num = os.path.split(issue_url)
+        issue_num = self._get_issue_num(issue_url)
+        base_url = self._get_base_url(issue_url)
 
         try:
             scraper = self._scrape_url(issue_url)
 
-            # Get all PDF links using Selenium to scroll and handle cookie popup once
-            # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all(
                 "a",
                 class_=lambda cls: cls and "pdf" in cls,
@@ -41,7 +60,7 @@ class RigaTechnicalUniversityScraper(BaseIterativeIssuesPublisherScraper):
             pdf_links = [
                 pdf_link
                 for tag in tags
-                if (pdf_link := self._scrape_article(get_scraped_url_by_bs_tag(tag, self._config_model.base_url)))
+                if (pdf_link := self._scrape_article(get_scraped_url_by_bs_tag(tag, base_url)))
             ]
 
             self._logger.debug(f"PDF links found: {len(pdf_links)}")
@@ -53,12 +72,17 @@ class RigaTechnicalUniversityScraper(BaseIterativeIssuesPublisherScraper):
             return None
 
     def _scrape_article(self, article_url: str) -> str | None:
+        self._logger.info(f"Processing article URL: {article_url}")
+        base_url = self._get_base_url(article_url)
+
         try:
             scraper = self._scrape_url(article_url)
 
             # Find the PDF link in the article page
             if pdf_tag := scraper.find("a", class_="download", href=True):
-                return get_scraped_url_by_bs_tag(pdf_tag, self._config_model.base_url)
+                pdf_link = get_scraped_url_by_bs_tag(pdf_tag, base_url)
+                self._logger.debug(f"PDF link found: {pdf_link}")
+                return pdf_link
 
             self._logger.warning(f"No PDF link found for article: {article_url}")
             return None
@@ -80,3 +104,11 @@ class RigaTechnicalUniversityScraper(BaseIterativeIssuesPublisherScraper):
             return [result] or []
 
         return self.__scrape_issue_url(link) or []
+
+
+class RigaTechnicalUniversityScraper(FramedScraper):
+    pass
+
+
+class JTITScraper(FramedScraper):
+    pass
