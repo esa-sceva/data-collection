@@ -9,7 +9,7 @@ class ReadMoreButton(BaseModel):
 
 class Config(ABC, BaseModel):
     bucket_key: str
-    files_by_request: bool | None = True  # Indicates whether the downloader should download or scrape the final sources
+    files_by_request: bool | None = True  # Indicates whether the uploader should download or scrape the final sources
 
 
 class BaseConfig(Config, ABC):
