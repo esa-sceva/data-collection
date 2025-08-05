@@ -283,7 +283,27 @@
         "waited_tag": "div.List-results-items",
         "sources": [
             {
-                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=(%22SAIEE%20Africa%20Research%20Journal%22%20OR%20%22IEEE%20Journal%20of%20Indoor%20and%20Seamless%20Positioning%20and%20Navigation%22%20OR%20%22IEEE%20Journal%20of%20Microwaves%22%20OR%20%22IEEE%20Open%20Journal%20of%20Antennas%20and%20Propagation%22%20OR%20%22IEEE%20Open%20Journal%20of%20Signal%20Processing%22)&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
+                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=%22SAIEE%20Africa%20Research%20Journal%22&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
+                "page_size": 100,
+                "max_allowed_papers": 10000
+            },
+            {
+                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=%22IEEE%20Journal%20of%20Indoor%20and%20Seamless%20Positioning%20and%20Navigation%22&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
+                "page_size": 100,
+                "max_allowed_papers": 10000
+            },
+            {
+                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=%22IEEE%20Journal%20of%20Microwaves%22&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
+                "page_size": 100,
+                "max_allowed_papers": 10000
+            },
+            {
+                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=%22IEEE%20Open%20Journal%20of%20Antennas%20and%20Propagation%22&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
+                "page_size": 100,
+                "max_allowed_papers": 10000
+            },
+            {
+                "landing_page_url": "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=%22IEEE%20Open%20Journal%20of%20Signal%20Processing%22&highlight=true&openAccess=true&rowsPerPage={page_size}&pageNumber={page_number}",
                 "page_size": 100,
                 "max_allowed_papers": 10000
             }
@@ -447,7 +467,7 @@
                 "config": {
                     "bucket_key": "{main_folder}/taylor_and_francis",
                     "base_url": "https://www.tandfonline.com",
-                    "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+                    "cookie_selector": "div.introModalSubmissionFooterContainer span.button-base-text.button-primary-text:first-of-type",
                     "request_with_proxy": true,
                     "sources": [
                         {
@@ -508,7 +528,7 @@
                 "scraper": "EsaUrlScraper",
                 "config": {
                     "base_url": "https://earth.esa.int/",
-                    "cookie_selector": "div#__next > div.fixed.bottom-0.left-0.right-0.bg-brand-bg-darker.text-white.font-esa > div.mx-auto.p-8.flex.flex-col > div.pt-4.flex.flex-col.gap-8.items-center.justify-center > button.p-1.uppercase.border.transition-colors",
+                    "cookie_selector": "div#__next div.flex.flex-col.flex-1 div.fixed.bottom-0.left-0.right-0.bg-brand-bg-darker.text-white.font-esa div.mx-auto.p-8.flex.flex-col div.pt-4.flex.flex-col.gap-8.items-center.justify-center button.p-1.uppercase.border.transition-colors",
                     "files_by_request": false,
                     "read_more_button": {
                         "selector": "button",
@@ -606,30 +626,31 @@
     },
     "EUDLScraper": {
         "bucket_key": "{main_folder}/eudl",
+        "base_url": "https://eudl.eu",
         "journals": [
             {
                 "url": "https://eudl.eu/issue/inis",
                 "name": "inis",
                 "start_volume": 1,
-                "end_volume": 16,
+                "end_volume": 13,
                 "start_issue": 1,
-                "end_issue": 34
+                "end_issue": 32
             },
             {
                 "url": "https://eudl.eu/issue/sis",
                 "name": "sis",
                 "start_volume": 1,
-                "end_volume": 16,
+                "end_volume": 13,
                 "start_issue": 1,
-                "end_issue": 34
+                "end_issue": 36
             },
             {
                 "url": "https://eudl.eu/issue/mca",
                 "name": "mca",
                 "start_volume": 1,
-                "end_volume": 11,
+                "end_volume": 10,
                 "start_issue": 1,
-                "end_issue": 24
+                "end_issue": 21
             }
         ]
     },

@@ -597,7 +597,7 @@
                 "scraper": "TaylorAndFrancisUrlScraper",
                 "config": {
                     "base_url": "https://www.tandfonline.com",
-                    "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+                    "cookie_selector": "div.introModalSubmissionFooterContainer span.button-base-text.button-primary-text:first-of-type",
                     "request_with_proxy": true,
                     "sources": [
                         {
@@ -903,7 +903,7 @@
                 "scraper": "EsaUrlScraper",
                 "config": {
                     "base_url": "https://earth.esa.int/",
-                    "cookie_selector": "div#__next > div.fixed.bottom-0.left-0.right-0.bg-brand-bg-darker.text-white.font-esa > div.mx-auto.p-8.flex.flex-col > div.pt-4.flex.flex-col.gap-8.items-center.justify-center > button.p-1.uppercase.border.transition-colors",
+                    "cookie_selector": "div#__next div.flex.flex-col.flex-1 div.fixed.bottom-0.left-0.right-0.bg-brand-bg-darker.text-white.font-esa div.mx-auto.p-8.flex.flex-col div.pt-4.flex.flex-col.gap-8.items-center.justify-center button.p-1.uppercase.border.transition-colors",
                     "files_by_request": false,
                     "read_more_button": {
                         "selector": "button",

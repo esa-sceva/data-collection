@@ -48,14 +48,17 @@ class OxfordAcademicScraper(BaseIterativePublisherScraper):
                 tags = []
 
             # find all the URLs to the articles where I can grab the PDF links
-            articles_links = [
-                get_scraped_url_by_web_element(a_tag, self._config_model.base_url)
-                for tag in tags
-                if (ancestor := get_ancestor(tag, "h5.customLink.item-title"))
-                   and (a_tag := ancestor.query_selector("a.at-articleLink"))
-                   and (href := a_tag.get_attribute("href"))
-                   and "/article/" in href
-            ]
+            articles_links = []
+            for i_, tag in enumerate(tags):
+                self._logger.debug(f"Processing tag {i_ + 1}/{len(tags)}")
+
+                if (
+                        (ancestor := get_ancestor(tag, "h5.customLink.item-title"))
+                        and (a_tag := ancestor.query_selector("a.at-articleLink"))
+                        and (href := a_tag.get_attribute("href"))
+                        and "/article/" in href
+                ):
+                    articles_links.append(get_scraped_url_by_web_element(a_tag, self._config_model.base_url))
 
             pdf_links = [
                 pdf_link for pdf_link in map(lambda link: self._scrape_article(link), articles_links) if pdf_link

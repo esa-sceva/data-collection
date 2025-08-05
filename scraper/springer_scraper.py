@@ -108,6 +108,7 @@ class SpringerUrlScraper(BaseUrlPublisherScraper, BaseMappedSubScraper):
                 "Issue / Collection",
                 lambda href: href and "/pdf/" in href,
             )
+            self._logger.debug(f"Found {len(tags) if tags else 0} PDF links on page {counter} of {source.url}")
             if tags is None:
                 break
 
@@ -181,12 +182,15 @@ class SpringerSearchEngineScraper(BasePaginationPublisherScraper, BaseMappedSubS
             except:
                 tags = []
 
-            articles_links = [
-                get_scraped_url_by_web_element(a_tag, self._config_model.base_url)
-                for tag in tags
-                if (ancestor := get_ancestor(tag, "div.app-card-open__main"))
-                   and (a_tag := ancestor.query_selector("a.app-card-open__link"))
-            ]
+            articles_links = []
+            for i_, tag in enumerate(tags):
+                self._logger.debug(f"Processing tag {i_ + 1}/{len(tags)}")
+
+                if (
+                        (ancestor := get_ancestor(tag, "div.app-card-open__main"))
+                        and (a_tag := ancestor.query_selector("a.app-card-open__link"))
+                ):
+                    articles_links.append(get_scraped_url_by_web_element(a_tag, self._config_model.base_url))
 
             if not articles_links:
                 self.__consecutive_failures += 1
