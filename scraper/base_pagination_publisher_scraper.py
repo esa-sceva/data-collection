@@ -126,3 +126,66 @@ class BasePaginationPublisherScraper(BaseScraper):
             ResultSet | List[Tag] | None: A ResultSet (i.e., a list) or a list of Tag objects containing the tags to the PDF links. If something went wrong, return None.
         """
         pass
+
+
+class BasePaginationLinksPublisherScraper(BasePaginationPublisherScraper):
+    def _scrape_pagination(
+        self, base_url: str, source_number: int, base_zero: bool = False, **kwargs
+    ) -> List[str]:
+        page_number = 0 if base_zero else 1
+        page_size = kwargs.get("page_size", 50)
+        max_allowed_papers = kwargs.get("max_allowed_papers")
+
+        pdf_link_list = []
+        while True:
+            start_index = (page_number if base_zero else page_number - 1) * page_size
+            if max_allowed_papers is not None and start_index >= max_allowed_papers:
+                break
+
+            # parse the query with parameters
+            # they are enclosed in curly braces, must be replaced with the actual values
+            # "page_number", "source_number" and "start_index" are reserved keywords
+            page_url = base_url.format(**(kwargs | {
+                "page_number": page_number,
+                "source_number": source_number,
+                "start_index": start_index,
+                "page_size": page_size
+            }))
+
+            self._logger.info(f"Processing Page {page_url}")
+
+            page_link_list = self._scrape_page(page_url)
+            if not self._is_valid_tag_list(page_link_list):
+                break
+
+            pdf_link_list.extend(page_link_list)
+            page_number += 1
+
+        return pdf_link_list
+
+    @abstractmethod
+    def _scrape_landing_page(self, landing_page_url: str, source_number: int) -> List[str] | None:
+        """
+        Scrape the landing page. This method must be implemented in the derived class.
+
+        Args:
+            landing_page_url (str): The landing page URL.
+            source_number (int): The source number.
+
+        Returns:
+            List[str] | None: A list of strings containing the PDF links, or None.
+        """
+        pass
+
+    @abstractmethod
+    def _scrape_page(self, url: str) -> List[str] | None:
+        """
+        Scrape the page. This method must be implemented in the derived class.
+
+        Args:
+            url (str): The URL to scrape.
+
+        Returns:
+            List[str] | None: A list of strings containing the PDF links. If something went wrong, return None.
+        """
+        pass
