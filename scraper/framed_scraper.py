@@ -3,6 +3,8 @@ from abc import ABC
 from typing import Type, List
 from urllib.parse import urlparse
 
+from bs4 import ResultSet
+
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import (
     BaseIterativeIssuePublisherJournal,
@@ -42,20 +44,25 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
         issue_url = os.path.join(journal.url, "issue", "view", issue_num)
         self._logger.info(f"Processing Issue URL: {issue_url}")
 
-        return self.__scrape_issue_url(issue_url)
+        return self._scrape_issue_url(issue_url)
 
-    def __scrape_issue_url(self, issue_url: str) -> IterativePublisherScrapeIssueOutput | None:
+    def _get_pdf_tags(self, issue_url: str, cls_tag: str | None = "pdf") -> ResultSet:
+        scraper = self._scrape_url(issue_url)
+
+        return scraper.find_all(
+            "a",
+            class_=lambda cls: cls and cls_tag in cls,
+            href=lambda href: href and "/article/view" in href
+        )
+
+    def _scrape_issue_url(
+        self, issue_url: str, cls_tag: str | None = "pdf"
+    ) -> IterativePublisherScrapeIssueOutput | None:
         issue_num = self._get_issue_num(issue_url)
         base_url = self._get_base_url(issue_url)
 
         try:
-            scraper = self._scrape_url(issue_url)
-
-            tags = scraper.find_all(
-                "a",
-                class_=lambda cls: cls and "pdf" in cls,
-                href=lambda href: href and "/article/view" in href
-            )
+            tags = self._get_pdf_tags(issue_url, cls_tag)
 
             pdf_links = [
                 pdf_link
@@ -100,7 +107,7 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
             result = self._scrape_article(link)
             return [result] or []
 
-        return self.__scrape_issue_url(link) or []
+        return self._scrape_issue_url(link) or []
 
 
 class RigaTechnicalUniversityScraper(FramedScraper):
@@ -113,3 +120,31 @@ class JTITScraper(FramedScraper):
 
 class CIMSJournalScraper(FramedScraper):
     pass
+
+
+class CSTJournalScraper(FramedScraper):
+    def _scrape_issue_url(
+        self, issue_url: str, cls_tag: str | None = "pdf"
+    ) -> IterativePublisherScrapeIssueOutput | None:
+        issue_num = self._get_issue_num(issue_url)
+        base_url = self._get_base_url(issue_url)
+
+        try:
+            tags = self._get_pdf_tags(issue_url, cls_tag)
+            if not tags:
+                tags = self._get_pdf_tags(issue_url, "file")
+
+            pdf_links = [
+                pdf_link
+                for tag in tags
+                if (pdf_link := self._scrape_article(get_scraped_url_by_bs_tag(tag, base_url)))
+            ]
+
+            self._logger.debug(f"PDF links found: {len(pdf_links)}")
+            return pdf_links
+        except Exception as e:
+            self._log_and_save_failure(
+                issue_url, f"Failed to process Issue {issue_num}. Error: {e}"
+            )
+            return None
+

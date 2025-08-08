@@ -859,5 +859,27 @@
                 "special_issues": ["4-1"]
             }
         ]
+    },
+    "CSTJournalScraper": {
+        "bucket_key": "{main_folder}/cst_journal",
+        "journals": [
+            {
+                "url": "https://cst.kipmi.or.id/journal/",
+                "name": "cst",
+                "start_issue": 1,
+                "end_issue": 26
+            }
+        ]
+    },
+    "EPJPhotovoltaicsJournalScraper": {
+        "bucket_key": "{main_folder}/epj_photovoltaics_journal",
+        "journals": [
+            {
+                "url": "https://www.epj-pv.org/",
+                "name": "epjpv",
+                "start_issue": 2010,
+                "end_issue": 2025
+            }
+        ]
     }
 }
