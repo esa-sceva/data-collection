@@ -444,7 +444,7 @@ def get_resource_from_remote_by_scraping(
     # return the resource from the scraping if the loading tag is provided
     with SB(**get_sb_configuration()) as sb:
         sb.activate_cdp_mode(source_url)
-        sb.maximize()
+        sb.cdp.maximize()
         sb.cdp.sleep(1)
         sb.uc_gui_click_captcha()
 
