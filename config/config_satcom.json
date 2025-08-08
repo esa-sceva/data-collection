@@ -836,5 +836,16 @@
                 "page_size": 100
             }
         ]
+    },
+    "ACIGJournalScraper": {
+        "bucket_key": "{main_folder}/acig_journal",
+        "base_url": "https://acigjournal.com/",
+        "cookie_selector": "a.cookieAccept",
+        "sources": [
+            {
+                "url": "https://www.acigjournal.com/Archive",
+                "type": "journal"
+            }
+        ]
     }
 }
