@@ -822,5 +822,19 @@
                 "end_issue": 106
             }
         ]
+    },
+    "AIMSPressScraper": {
+        "bucket_key": "{main_folder}/aims_press",
+        "base_url": "https://www.aimspress.com/",
+        "sources": [
+            {
+                "landing_page_url": "https://www.aimspress.com/search-data?aggreFields=year;authors.authorNameEn;keywords.keywordEn;classifyinfoEn;journalMeta.titleEn&language=en&limit={page_size}&pn={page_number}&publisherId=electreng&q=",
+                "page_size": 100
+            },
+            {
+                "landing_page_url": "https://www.aimspress.com/search-data?aggreFields=year;authors.authorNameEn;keywords.keywordEn;classifyinfoEn;journalMeta.titleEn&language=en&limit={page_size}&pn={page_number}&publisherId=era&q=",
+                "page_size": 100
+            }
+        ]
     }
 }

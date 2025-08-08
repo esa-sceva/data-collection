@@ -404,8 +404,8 @@ def get_scraped_url_by_web_element(we: WebElement, base_url: str, with_querystri
 
 
 def get_resource_from_remote_by_request(
-    source_url: str, request_with_proxy: bool = False, max_retries: int | None = 5
-) -> bytes:
+    source_url: str, request_with_proxy: bool = False, max_retries: int | None = 5, ask_json: bool = False
+) -> bytes | Dict:
     proxy = get_interacting_proxy_config()
     headers = {
         "User-Agent": get_user_agent(),
@@ -424,6 +424,12 @@ def get_resource_from_remote_by_request(
             ) if request_with_proxy else requests.get(source_url, headers=headers)
 
             response.raise_for_status()  # Check for request errors
+
+            if ask_json:
+                try:
+                    return response.json()
+                except json.JSONDecodeError:
+                    raise ValueError(f"Response from {source_url} is not valid JSON.")
 
             return response.content
         except Exception as e:

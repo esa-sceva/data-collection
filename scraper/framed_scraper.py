@@ -99,7 +99,7 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
         link = failure.source
         self._logger.info(f"Scraping URL: {link}")
 
-        if "Article" in failure.message:
+        if "article" in failure.message.lower():
             result = self._scrape_article(link)
             return [result] or []
 
