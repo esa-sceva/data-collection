@@ -64,19 +64,19 @@ class BaseIterativePublisherScraper(BaseScraper):
 
     def _build_journal_links(self, journal: BaseIterativePublisherJournal) -> IterativePublisherScrapeJournalOutput:
         return {
-            volume_num: self._scrape_volume(journal, volume_num)
+            str(volume_num): self._scrape_volume(journal, str(volume_num))
             for volume_num in range(journal.start_volume, journal.end_volume + 1)
         }
 
     def _scrape_volume(
-        self, journal: BaseIterativePublisherJournal, volume_num: int
+        self, journal: BaseIterativePublisherJournal, volume_num: str
     ) -> IterativePublisherScrapeVolumeOutput:
         """
         Scrape all issues of a volume. This method must be implemented in the derived class.
 
         Args:
             journal (BaseIterativePublisherJournal): The journal to scrape.
-            volume_num (int): The volume number.
+            volume_num (str): The volume number.
 
         Returns:
             IterativePublisherScrapeVolumeOutput: A dictionary containing the PDF links.
@@ -85,25 +85,50 @@ class BaseIterativePublisherScraper(BaseScraper):
         return self._build_volume_links(journal, volume_num)
 
     def _build_volume_links(
-        self, journal: BaseIterativePublisherJournal, volume_num: int
+        self, journal: BaseIterativePublisherJournal, volume_num: str
     ) -> IterativePublisherScrapeVolumeOutput:
-        return {
-            issue_num: scrape_issue_result
+        result = {
+            str(issue_num): scrape_issue_result
             for issue_num in range(journal.start_issue, journal.end_issue + 1)
-            if (scrape_issue_result := self._scrape_issue(journal, volume_num, issue_num))
+            if (scrape_issue_result := self._scrape_issue(journal, volume_num, str(issue_num)))
+        }
+
+        result |= self._build_links_special_issues(journal)
+        return result
+
+    def _build_links_special_issues(
+        self, journal: BaseIterativePublisherJournal, volume_num: str
+    ) -> IterativePublisherScrapeVolumeOutput:
+        """
+        Build links for special issues if they exist. This method can be overridden in derived classes.
+
+        Args:
+            journal (BaseIterativePublisherJournal): The journal to scrape.
+            volume_num (str): The volume number. Defaults to None.
+
+        Returns:
+            IterativePublisherScrapeIssueOutput: A dictionary containing the PDF links for special issues.
+        """
+        if not journal.special_issues:
+            return {}
+
+        return {
+            issue_num: issue_links
+            for issue_num in journal.special_issues
+            if (issue_links := self._scrape_issue(journal, volume_num, str(issue_num)))
         }
 
     @abstractmethod
     def _scrape_issue(
-        self, journal: BaseIterativePublisherJournal, volume_num: int, issue_num: int
+        self, journal: BaseIterativePublisherJournal, volume_num: str, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
         """
         Scrape the issue URL for PDF links. This method must be implemented in the derived class.
 
         Args:
             journal (BaseIterativePublisherJournal): The journal to scrape.
-            volume_num (int): The volume number.
-            issue_num (int): The issue number.
+            volume_num (str): The volume number.
+            issue_num (str): The issue number.
 
         Returns:
             IterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
@@ -145,13 +170,14 @@ class BaseIterativeWithConstraintPublisherScraper(BaseIterativePublisherScraper,
         return links
 
     def _build_volume_links(
-        self, journal: BaseIterativeWithConstraintPublisherJournal, volume_num: int
+        self, journal: BaseIterativeWithConstraintPublisherJournal, volume_num: str
     ) -> IterativePublisherScrapeVolumeOutput:
         missing_issue_count = 0  # Track consecutive missing issues
         links = {}
 
         # Iterate over each issue in the specified range
         for issue_num in range(journal.start_issue, journal.end_issue + 1):
+            issue_num = str(issue_num)
             if missing_issue_count >= journal.consecutive_missing_issues_threshold:
                 self._logger.warning(f"Max consecutive missing issues for Volume {volume_num} reached. Moving to the next volume.")
                 break  # Exit loop and move to the next volume
@@ -163,6 +189,8 @@ class BaseIterativeWithConstraintPublisherScraper(BaseIterativePublisherScraper,
                 continue
 
             missing_issue_count += 1
+
+        links |= self._build_links_special_issues(journal, volume_num)
 
         return links
 
@@ -182,7 +210,7 @@ class BaseIterativeIssuesPublisherScraper(BaseScraper):
 
         for journal in self._config_model.journals:
             if scraped_tags := self._scrape_journal(journal):
-                links[self.journal_identifier(journal)] = scraped_tags
+                links[journal.name] = scraped_tags
 
         return links if links else None
 
@@ -221,22 +249,46 @@ class BaseIterativeIssuesPublisherScraper(BaseScraper):
     def _build_journal_links(
         self, journal: BaseIterativeIssuePublisherJournal
     ) -> IterativeIssuePublisherScrapeJournalOutput:
-        result = {}
-        for issue_num in range(journal.start_issue, journal.end_issue + 1):
-            if issue_links := self._scrape_issue(journal, issue_num):
-                result[issue_num] = issue_links
+        result = {
+            str(issue_num): issue_links
+            for issue_num in range(journal.start_issue, journal.end_issue + 1)
+            if (issue_links := self._scrape_issue(journal, str(issue_num)))
+        }
+
+        result |= self._build_links_special_issues(journal)
         return result
+
+    def _build_links_special_issues(
+        self, journal: BaseIterativeIssuePublisherJournal
+    ) -> IterativeIssuePublisherScrapeJournalOutput:
+        """
+        Build links for special issues if they exist. This method can be overridden in derived classes.
+
+        Args:
+            journal (BaseIterativeIssuePublisherJournal): The journal to scrape.
+
+        Returns:
+            IterativeIssuePublisherScrapeJournalOutput: A dictionary containing the PDF links for special issues.
+        """
+        if not journal.special_issues:
+            return {}
+
+        return {
+            issue_num: issue_links
+            for issue_num in journal.special_issues
+            if (issue_links := self._scrape_issue(journal, issue_num))
+        }
 
     @abstractmethod
     def _scrape_issue(
-        self, journal: BaseIterativeIssuePublisherJournal, issue_num: int
+        self, journal: BaseIterativeIssuePublisherJournal, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
         """
         Scrape the issue URL for PDF links. This method must be implemented in the derived class.
 
         Args:
             journal (BaseIterativeIssuePublisherJournal): The journal to scrape.
-            issue_num (int): The issue number.
+            issue_num (str): The issue number.
 
         Returns:
             IterativePublisherScrapeIssueOutput | None: A list of PDF links found in the issue, or None if something went wrong.
@@ -253,18 +305,5 @@ class BaseIterativeIssuesPublisherScraper(BaseScraper):
 
         Returns:
             str | None: The string containing the PDF link.
-        """
-        pass
-
-    @abstractmethod
-    def journal_identifier(self, model: BaseIterativeIssuePublisherJournal) -> str:
-        """
-        Return the journal identifier. This method must be implemented in the derived class.
-
-        Args:
-            model (BaseIterativeIssuePublisherJournal): The configuration model.
-
-        Returns:
-            str: The journal identifier
         """
         pass

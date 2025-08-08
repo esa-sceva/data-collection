@@ -18,9 +18,9 @@ class NationalAcademySciencesUkraineScraper(BaseIterativeIssuesPublisherScraper)
         return BaseIterativeIssuePublisherConfig
 
     def _scrape_issue(
-        self, journal: BaseIterativeIssuePublisherJournal, issue_num: int
+        self, journal: BaseIterativeIssuePublisherJournal, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_url = os.path.join(journal.url, "issue", "view", str(issue_num))
+        issue_url = os.path.join(journal.url, "issue", "view", issue_num)
         self._logger.info(f"Processing Issue URL: {issue_url}")
 
         return self.__scrape_issue_url(issue_url)
@@ -59,9 +59,6 @@ class NationalAcademySciencesUkraineScraper(BaseIterativeIssuesPublisherScraper)
 
     def _scrape_article(self, article_url: str) -> str | None:
         pass
-
-    def journal_identifier(self, model: BaseIterativeIssuePublisherJournal) -> str:
-        return model.name
 
     def scrape_failure(self, failure: ScraperFailure) -> List[str]:
         link = failure.source

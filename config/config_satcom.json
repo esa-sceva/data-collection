@@ -847,5 +847,17 @@
                 "type": "journal"
             }
         ]
+    },
+    "CIMSJournalScraper": {
+        "bucket_key": "{main_folder}/cims_journal",
+        "journals": [
+            {
+                "url": "https://cims.fti.dp.ua/j/",
+                "name": "cims",
+                "start_issue": 1,
+                "end_issue": 3,
+                "special_issues": ["4-1"]
+            }
+        ]
     }
 }

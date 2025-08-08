@@ -15,7 +15,7 @@ class RadioEngCZScraper(BaseIterativePublisherScraper):
         return EUDLConfig
 
     def _scrape_issue(
-        self, journal: EUDLJournal, volume_num: int, issue_num: int
+        self, journal: EUDLJournal, volume_num: str, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
         issue_url = os.path.join(journal.url, "papers", f"{volume_num}-{issue_num}.htm")
         self._logger.info(f"Processing Issue URL: {issue_url}")

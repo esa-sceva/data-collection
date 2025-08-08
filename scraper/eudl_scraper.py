@@ -15,9 +15,9 @@ class EUDLScraper(BaseIterativePublisherScraper):
         return EUDLConfig
 
     def _scrape_issue(
-        self, journal: EUDLJournal, volume_num: int, issue_num: int
+        self, journal: EUDLJournal, volume_num: str, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_url = os.path.join(journal.url, str(volume_num), str(issue_num))
+        issue_url = os.path.join(journal.url, volume_num, issue_num)
         self._logger.info(f"Processing Issue URL: {issue_url}")
 
         return self.__scrape_url(issue_url)

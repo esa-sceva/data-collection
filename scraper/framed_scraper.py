@@ -37,9 +37,9 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
         return f"{parsed_url.scheme}://{parsed_url.netloc}"
 
     def _scrape_issue(
-        self, journal: BaseIterativeIssuePublisherJournal, issue_num: int
+        self, journal: BaseIterativeIssuePublisherJournal, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_url = os.path.join(journal.url, "issue", "view", str(issue_num))
+        issue_url = os.path.join(journal.url, "issue", "view", issue_num)
         self._logger.info(f"Processing Issue URL: {issue_url}")
 
         return self.__scrape_issue_url(issue_url)
@@ -92,9 +92,6 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
             )
             return None
 
-    def journal_identifier(self, model: BaseIterativeIssuePublisherJournal) -> str:
-        return model.name
-
     def scrape_failure(self, failure: ScraperFailure) -> List[str]:
         link = failure.source
         self._logger.info(f"Scraping URL: {link}")
@@ -111,4 +108,8 @@ class RigaTechnicalUniversityScraper(FramedScraper):
 
 
 class JTITScraper(FramedScraper):
+    pass
+
+
+class CIMSJournalScraper(FramedScraper):
     pass

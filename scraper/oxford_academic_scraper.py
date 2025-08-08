@@ -15,9 +15,9 @@ class OxfordAcademicScraper(BaseIterativePublisherScraper):
         return OxfordAcademicConfig
 
     def _scrape_issue(
-        self, journal: OxfordAcademicJournal, volume_num: int, issue_num: int
+        self, journal: OxfordAcademicJournal, volume_num: str, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_url = os.path.join(journal.url, "issue", str(volume_num), str(issue_num))
+        issue_url = os.path.join(journal.url, "issue", volume_num, issue_num)
         self._logger.info(f"Processing Issue URL: {issue_url}")
         return self.__scrape_issue(issue_url)
 

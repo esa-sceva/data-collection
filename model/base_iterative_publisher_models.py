@@ -9,6 +9,7 @@ class BaseIterativeIssuePublisherJournal(BaseModel):
     name: str
     start_issue: int | None = 1
     end_issue: int | None = 30
+    special_issues: List[str] | None = None
 
 
 class BaseIterativeIssuePublisherConfig(BaseConfig):
@@ -34,8 +35,8 @@ class BaseIterativeWithConstraintPublisherConfig(BaseConfig):
 
 
 IterativePublisherScrapeIssueOutput: TypeAlias = List[str]
-IterativePublisherScrapeVolumeOutput: TypeAlias = Dict[int, IterativePublisherScrapeIssueOutput]
-IterativePublisherScrapeJournalOutput: TypeAlias = Dict[int, IterativePublisherScrapeVolumeOutput]
+IterativePublisherScrapeVolumeOutput: TypeAlias = Dict[str, IterativePublisherScrapeIssueOutput]
+IterativePublisherScrapeJournalOutput: TypeAlias = Dict[str, IterativePublisherScrapeVolumeOutput]
 IterativePublisherScrapeOutput: TypeAlias = Dict[str, IterativePublisherScrapeJournalOutput]
 
 IterativeIssuePublisherScrapeJournalOutput: TypeAlias = IterativePublisherScrapeVolumeOutput

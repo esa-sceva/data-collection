@@ -17,9 +17,9 @@ class ElectromagneticScienceScraper(BaseIterativePublisherScraper):
         return BaseIterativePublisherConfig
 
     def _scrape_issue(
-        self, journal: BaseIterativePublisherJournal, volume_num: int, issue_num: int
+        self, journal: BaseIterativePublisherJournal, volume_num: str, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_url = os.path.join(journal.url, "en", "article", str(volume_num), str(issue_num))
+        issue_url = os.path.join(journal.url, "en", "article", volume_num, issue_num)
         self._logger.info(f"Processing Issue URL: {issue_url}")
 
         return self.__scrape_url(issue_url)

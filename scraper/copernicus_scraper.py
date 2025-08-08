@@ -18,9 +18,9 @@ class CopernicusScraper(BaseIterativeWithConstraintPublisherScraper):
         return BaseIterativeWithConstraintPublisherConfig
 
     def _scrape_issue(
-        self, journal: BaseIterativeWithConstraintPublisherJournal, volume_num: int, issue_num: int
+        self, journal: BaseIterativeWithConstraintPublisherJournal, volume_num: str, issue_num: str
     ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_url = os.path.join(journal.url, "articles", str(volume_num), f"issue{issue_num}.html")
+        issue_url = os.path.join(journal.url, "articles", volume_num, f"issue{issue_num}.html")
         self._logger.info(f"Processing Issue URL: {issue_url}")
         return self.__scrape_issue(issue_url)
 
