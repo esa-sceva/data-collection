@@ -757,6 +757,7 @@
         "bucket_key": "{main_folder}/spj",
         "base_url": "https://spj.science.org/",
         "cookie_selector": "div[id=wb_cookie_setting_ok]",
+        "request_with_proxy": true,
         "sources": [
             {
                 "landing_page_url": "https://spj.science.org/index/adi?pageSize={page_size}&startPage={page_number}",
