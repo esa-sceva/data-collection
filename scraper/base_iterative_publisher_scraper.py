@@ -27,7 +27,7 @@ class BaseIterativePublisherScraper(BaseScraper):
 
         for journal in self._config_model.journals:
             if scraped_tags := self._scrape_journal(journal):
-                links[self.journal_identifier(journal)] = scraped_tags
+                links[journal.name] = scraped_tags
 
         return links if links else None
 
@@ -120,19 +120,6 @@ class BaseIterativePublisherScraper(BaseScraper):
 
         Returns:
             str | None: The string containing the PDF link.
-        """
-        pass
-
-    @abstractmethod
-    def journal_identifier(self, model: BaseIterativePublisherJournal) -> str:
-        """
-        Return the journal identifier. This method must be implemented in the derived class.
-
-        Args:
-            model (BaseIterativePublisherJournal): The configuration model.
-
-        Returns:
-            str: The journal identifier
         """
         pass
 

@@ -16,9 +16,6 @@ class ElectromagneticScienceScraper(BaseIterativePublisherScraper):
     def config_model_type(self) -> Type[BaseIterativePublisherConfig]:
         return BaseIterativePublisherConfig
 
-    def journal_identifier(self, model: BaseIterativePublisherJournal) -> str:
-        return model.name
-
     def _scrape_issue(
         self, journal: BaseIterativePublisherJournal, volume_num: int, issue_num: int
     ) -> IterativePublisherScrapeIssueOutput | None:

@@ -14,9 +14,6 @@ class RadioEngCZScraper(BaseIterativePublisherScraper):
     def config_model_type(self) -> Type[EUDLConfig]:
         return EUDLConfig
 
-    def journal_identifier(self, model: EUDLJournal) -> str:
-        return model.name
-
     def _scrape_issue(
         self, journal: EUDLJournal, volume_num: int, issue_num: int
     ) -> IterativePublisherScrapeIssueOutput | None:

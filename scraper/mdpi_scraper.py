@@ -29,9 +29,6 @@ class MDPIJournalsScraper(BaseIterativePublisherScraper, BaseMappedSubScraper):
     def config_model_type(self) -> Type[MDPIConfig]:
         return MDPIConfig
 
-    def journal_identifier(self, model: MDPIJournal) -> str:
-        return model.name
-
     def _scrape_issue(
         self, journal: MDPIJournal, volume_num: int, issue_num: int
     ) -> IterativePublisherScrapeIssueOutput | None:

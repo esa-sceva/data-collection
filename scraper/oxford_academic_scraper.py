@@ -14,9 +14,6 @@ class OxfordAcademicScraper(BaseIterativePublisherScraper):
     def config_model_type(self) -> Type[OxfordAcademicConfig]:
         return OxfordAcademicConfig
 
-    def journal_identifier(self, model: OxfordAcademicJournal) -> str:
-        return model.code
-
     def _scrape_issue(
         self, journal: OxfordAcademicJournal, volume_num: int, issue_num: int
     ) -> IterativePublisherScrapeIssueOutput | None:

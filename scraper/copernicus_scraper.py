@@ -17,9 +17,6 @@ class CopernicusScraper(BaseIterativeWithConstraintPublisherScraper):
     def config_model_type(self) -> Type[BaseIterativeWithConstraintPublisherConfig]:
         return BaseIterativeWithConstraintPublisherConfig
 
-    def journal_identifier(self, model: BaseIterativeWithConstraintPublisherJournal) -> str:
-        return model.name
-
     def _scrape_issue(
         self, journal: BaseIterativeWithConstraintPublisherJournal, volume_num: int, issue_num: int
     ) -> IterativePublisherScrapeIssueOutput | None:
