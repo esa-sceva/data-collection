@@ -93,7 +93,7 @@ class BaseIterativePublisherScraper(BaseScraper):
             if (scrape_issue_result := self._scrape_issue(journal, volume_num, str(issue_num)))
         }
 
-        result |= self._build_links_special_issues(journal)
+        result |= self._build_links_special_issues(journal, volume_num)
         return result
 
     def _build_links_special_issues(
