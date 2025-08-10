@@ -224,12 +224,6 @@
                             "base_url": "https://jwcn-eurasipjournals.springeropen.com"
                         },
                         {
-                            "url": "https://earth-planets-space.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
-                            "type": "issue_or_collection",
-                            "has_pagination": true,
-                            "base_url": "https://earth-planets-space.springeropen.com"
-                        },
-                        {
                             "url": "https://journalofbigdata.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
                             "type": "issue_or_collection",
                             "has_pagination": true,
