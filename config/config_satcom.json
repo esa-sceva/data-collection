@@ -224,12 +224,6 @@
                             "base_url": "https://jwcn-eurasipjournals.springeropen.com"
                         },
                         {
-                            "url": "https://earth-planets-space.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
-                            "type": "issue_or_collection",
-                            "has_pagination": true,
-                            "base_url": "https://earth-planets-space.springeropen.com"
-                        },
-                        {
                             "url": "https://journalofbigdata.springeropen.com/articles?searchType=journalSearch&sort=PubDate",
                             "type": "issue_or_collection",
                             "has_pagination": true,
@@ -888,8 +882,8 @@
         "cookie_selector": "button.cookie-button-accept",
         "sources": [
             {
-                "landing_page_url": "https://www.degruyterbrill.com/search?query=journalKey:(ASTRO)&startItem={start_index}&pageSize={page_size}&documentVisibility=all",
-                "page_size": 300
+                "landing_page_url": "https://www.degruyterbrill.com/search?query=journalKey:astro&startItem={start_index}&pageSize={page_size}&documentVisibility=all",
+                "page_size": 100
             }
         ]
     },
