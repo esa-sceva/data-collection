@@ -892,5 +892,16 @@
                 "page_size": 300
             }
         ]
+    },
+    "ITEECSJournalScraper": {
+        "bucket_key": "{main_folder}/iteecs_journal",
+        "journals": [
+            {
+                "url": "https://iteecs.com/index.php/iteecs",
+                "name": "iteecs",
+                "start_issue": 6,
+                "end_issue": 18
+            }
+        ]
     }
 }

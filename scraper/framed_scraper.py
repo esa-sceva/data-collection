@@ -2,8 +2,7 @@ import os
 from abc import ABC
 from typing import Type, List
 from urllib.parse import urlparse
-
-from bs4 import ResultSet
+from bs4 import Tag
 
 from helper.utils import get_scraped_url_by_bs_tag
 from model.base_iterative_publisher_models import (
@@ -19,6 +18,10 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
     @property
     def config_model_type(self) -> Type[BaseIterativeIssuePublisherConfig]:
         return BaseIterativeIssuePublisherConfig
+
+    @property
+    def article_classes(self) -> List[str] | None:
+        return ["pdf"]
 
     def _get_issue_num(self, issue_url: str) -> str:
         """
@@ -46,23 +49,31 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
 
         return self._scrape_issue_url(issue_url)
 
-    def _get_pdf_tags(self, issue_url: str, cls_tag: str | None = "pdf") -> ResultSet:
+    def _get_article_tags(self, issue_url: str) -> List[Tag]:
         scraper = self._scrape_url(issue_url)
 
-        return scraper.find_all(
-            "a",
-            class_=lambda cls: cls and cls_tag in cls,
-            href=lambda href: href and "/article/view" in href
-        )
+        article_classes = self.article_classes
+        if not article_classes:
+            return scraper.find_all("a", href=lambda href: href and "/article/view" in href)
 
-    def _scrape_issue_url(
-        self, issue_url: str, cls_tag: str | None = "pdf"
-    ) -> IterativePublisherScrapeIssueOutput | None:
+        result = []
+        for cls_tag in self.article_classes:
+            result.extend(
+                scraper.find_all(
+                    "a",
+                    class_=lambda cls: cls and cls_tag in cls,
+                    href=lambda href: href and "/article/view" in href
+                )
+            )
+
+        return result
+
+    def _scrape_issue_url(self, issue_url: str) -> IterativePublisherScrapeIssueOutput | None:
         issue_num = self._get_issue_num(issue_url)
         base_url = self._get_base_url(issue_url)
 
         try:
-            tags = self._get_pdf_tags(issue_url, cls_tag)
+            tags = self._get_article_tags(issue_url)
 
             pdf_links = [
                 pdf_link
@@ -123,28 +134,48 @@ class CIMSJournalScraper(FramedScraper):
 
 
 class CSTJournalScraper(FramedScraper):
-    def _scrape_issue_url(
-        self, issue_url: str, cls_tag: str | None = "pdf"
-    ) -> IterativePublisherScrapeIssueOutput | None:
-        issue_num = self._get_issue_num(issue_url)
-        base_url = self._get_base_url(issue_url)
+    @property
+    def article_classes(self) -> List[str] | None:
+        return ["pdf", "file"]
+
+
+class ITEECSJournalScraper(FramedScraper):
+    @property
+    def article_classes(self) -> List[str] | None:
+        return None
+
+    def _scrape_article(self, article_url: str) -> str | None:
+        self._logger.info(f"Processing abstract URL: {article_url}")
+        base_url = self._get_base_url(article_url)
 
         try:
-            tags = self._get_pdf_tags(issue_url, cls_tag)
-            if not tags:
-                tags = self._get_pdf_tags(issue_url, "file")
+            scraper = self._scrape_url(article_url)
 
-            pdf_links = [
-                pdf_link
-                for tag in tags
-                if (pdf_link := self._scrape_article(get_scraped_url_by_bs_tag(tag, base_url)))
-            ]
+            pdf_tag = scraper.find(
+                "a", class_=lambda cls: cls and "pdf" in cls,  href=lambda href: href and "/article/view" in href
+            )
+            if not pdf_tag:
+                self._logger.warning(f"No PDF tag found for abstract: {article_url}")
+                return None
 
-            self._logger.debug(f"PDF links found: {len(pdf_links)}")
-            return pdf_links
+            # look for the tag with class "pdf" and "/article/view" in href
+            pdf_link = get_scraped_url_by_bs_tag(pdf_tag, base_url)
+            self._logger.debug(f"Page to PDF found: {pdf_link}")
+
+            # now, visit the PDF link and grab the real link to the PDF file
+            return super()._scrape_article(pdf_link)
         except Exception as e:
             self._log_and_save_failure(
-                issue_url, f"Failed to process Issue {issue_num}. Error: {e}"
+                article_url, f"Failed to scrape Abstract {article_url}. Error: {e}"
             )
             return None
 
+    def scrape_failure(self, failure: ScraperFailure) -> List[str]:
+        link = failure.source
+        self._logger.info(f"Scraping URL: {link}")
+
+        if "abstract" in failure.message.lower():
+            result = self._scrape_article(link)
+            return [result] or []
+
+        return super().scrape_failure(failure)
