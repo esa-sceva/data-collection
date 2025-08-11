@@ -123,7 +123,7 @@ class BaseScraper(ABC):
                 return null;
             }}
             const scrollable = getScrollableElement();
-            return scrollable ? scrollable.scrollHeight : document.body.scrollHeight;
+            return scrollable?.scrollHeight || document.body?.scrollHeight || document.documentElement.scrollHeight;
         """)
 
         while True:
@@ -132,7 +132,7 @@ class BaseScraper(ABC):
                 if (scrollable) {{
                     scrollable.scrollTop = scrollable.scrollHeight;
                 }} else {{
-                    window.scrollTo(0, document.body.scrollHeight);
+                    window.scrollTo(0, document.body?.scrollHeight || document.documentElement.scrollHeight);
                 }}
             """)
             self._driver.cdp.sleep(pause_time)
@@ -143,7 +143,7 @@ class BaseScraper(ABC):
                 )
 
             # Calculate new scroll height and compare with the last height
-            new_height = self._driver.execute_script("return scrollable ? scrollable.scrollHeight : document.body.scrollHeight;")
+            new_height = self._driver.execute_script("return scrollable?.scrollHeight || document.body?.scrollHeight || document.documentElement.scrollHeight;")
             if new_height == last_height:
                 break
             last_height = new_height

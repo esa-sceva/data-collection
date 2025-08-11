@@ -897,10 +897,66 @@
         "bucket_key": "{main_folder}/iteecs_journal",
         "journals": [
             {
-                "url": "https://iteecs.com/index.php/iteecs",
+                "url": "https://iteecs.com/index.php/iteecs/",
                 "name": "iteecs",
                 "start_issue": 6,
                 "end_issue": 18
+            }
+        ]
+    },
+    "IJEEASJournalScraper": {
+        "bucket_key": "{main_folder}/ijeeas_journal",
+        "journals": [
+            {
+                "url": "https://ijeeas.utem.edu.my/ijeeas/",
+                "name": "ijeeas",
+                "start_issue": 260,
+                "end_issue": 267,
+                "special_issues": ["184", "206", "221", "234", "249", "257", "276"]
+            }
+        ]
+    },
+    "IJICTJournalScraper": {
+        "bucket_key": "{main_folder}/ijict_journal",
+        "journals": [
+            {
+                "url": "https://ijict.edu.iq/index.php/ijict/",
+                "name": "ijict",
+                "start_issue": 1,
+                "end_issue": 33
+            }
+        ]
+    },
+    "JAECJournalScraper": {
+        "bucket_key": "{main_folder}/jaec_journal",
+        "journals": [
+            {
+                "url": "https://jaec.vn/index.php/JAEC/",
+                "name": "jaec",
+                "start_issue": 6,
+                "end_issue": 46
+            }
+        ]
+    },
+    "RESTIJournalScraper": {
+        "bucket_key": "{main_folder}/resti_journal",
+        "journals": [
+            {
+                "url": "https://jurnal.iaii.or.id/index.php/RESTI/",
+                "name": "resti",
+                "start_issue": 1,
+                "end_issue": 65
+            }
+        ]
+    },
+    "EECCISJournalScraper": {
+        "bucket_key": "{main_folder}/eeccis_journal",
+        "journals": [
+            {
+                "url": "https://jurnaleeccis.ub.ac.id/index.php/eeccis/",
+                "name": "eeccis",
+                "start_issue": 10,
+                "end_issue": 57
             }
         ]
     }

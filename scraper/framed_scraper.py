@@ -179,3 +179,19 @@ class ITEECSJournalScraper(FramedScraper):
             return [result] or []
 
         return super().scrape_failure(failure)
+
+
+class IJEEASJournalScraper(FramedScraper):
+    pass
+
+
+class IJICTJournalScraper(FramedScraper):
+    pass
+
+
+class RESTIJournalScraper(FramedScraper):
+    pass
+
+
+class EECCISJournalScraper(FramedScraper):
+    pass
