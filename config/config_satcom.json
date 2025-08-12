@@ -717,7 +717,7 @@
     "AIPScraper": {
         "bucket_key": "{main_folder}/aip",
         "base_url": "https://pubs.aip.org/",
-        "cookie_selector": "button.osano-cm-accept-all",
+        "request_with_proxy": true,
         "sources": [
             {
                 "landing_page_url": "https://pubs.aip.org/aip/adv/search-results?f_ContentType=Journal+Articles&fl_SiteID=1000003&page={page_number}&page_size={page_size}",
