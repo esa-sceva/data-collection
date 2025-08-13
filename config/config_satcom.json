@@ -332,6 +332,7 @@
     },
     "MDPIScraper": {
         "bucket_key": "{main_folder}/mdpi",
+        "request_with_proxy": true,
         "sources": [
             {
                 "name": "MDPI Algorithms",
