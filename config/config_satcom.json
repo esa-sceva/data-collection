@@ -676,6 +676,7 @@
         "bucket_key": "{main_folder}/iopscience",
         "base_url": "https://iopscience.iop.org",
         "cookie_selector": "div.cky-consent-container.cky-classic-bottom > div.cky-consent-bar > div > div > div.cky-notice-btn-wrapper > button.cky-btn.cky-btn-accept",
+        "request_with_proxy": true,
         "sources": [
             {
                 "url": "https://iopscience.iop.org/issue/2399-6528/1/1",
