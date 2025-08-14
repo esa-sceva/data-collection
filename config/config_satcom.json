@@ -118,7 +118,7 @@
                 "page_size": 100
             },
             {
-                "landing_page_url": "https://ietresearch.onlinelibrary.wiley.com/action/doSearch?SeriesKey=17518636&sortBy=Earliest&pageSize={page_size}&startPage={page_number}",
+                "landing_page_url": "https://ietresearch.onlinelibrary.wiley.com/action/doSearch?SeriesKey=17518636&sortBy=Earliest&ConceptID=15941&pageSize={page_size}&startPage={page_number}",
                 "name": "IET Communications",
                 "base_url": "https://ietresearch.onlinelibrary.wiley.com",
                 "page_size": 100
@@ -160,13 +160,13 @@
                 "page_size": 100
             },
             {
-                "landing_page_url": "https://onlinelibrary.wiley.com/index/1742&pageSize={page_size}&startPage={page_number}",
+                "landing_page_url": "https://onlinelibrary.wiley.com/index/1742?pageSize={page_size}&startPage={page_number}",
                 "name": "Journal of Electrical and Computer Engineering",
                 "base_url": "https://onlinelibrary.wiley.com",
                 "page_size": 100
             },
             {
-                "landing_page_url": "https://onlinelibrary.wiley.com/index/5080&pageSize={page_size}&startPage={page_number}",
+                "landing_page_url": "https://onlinelibrary.wiley.com/index/5080?pageSize={page_size}&startPage={page_number}",
                 "name": "Active and Passive Electronic Components",
                 "base_url": "https://onlinelibrary.wiley.com",
                 "page_size": 100
