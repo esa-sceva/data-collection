@@ -965,7 +965,6 @@
             }
         ]
     },
-
     "JICTJournalScraper": {
         "bucket_key": "{main_folder}/jict_journal",
         "journals": [
@@ -978,6 +977,16 @@
                     "681", "406", "463", "492", "515", "801", "795", "787", "772", "756", "744", "736", "725", "696",
                     "705", "712", "680", "645", "633", "612", "611", "610", "586", "529"
                 ]
+            }
+        ]
+    },
+    "JECEIJournalScraper": {
+        "bucket_key": "{main_folder}/jecei_journal",
+        "base_url": "https://jecei.sru.ac.ir/",
+        "sources": [
+            {
+                "url": "https://jecei.sru.ac.ir/",
+                "type": "journal"
             }
         ]
     }
