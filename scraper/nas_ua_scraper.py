@@ -36,8 +36,6 @@ class NationalAcademySciencesUkraineScraper(BaseIterativeIssuesPublisherScraper)
         try:
             scraper = self._scrape_url(issue_url)
 
-            # Get all PDF links using Selenium to scroll and handle cookie popup once
-            # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all(
                 "a",
                 class_=lambda cls: cls and "file" in cls,

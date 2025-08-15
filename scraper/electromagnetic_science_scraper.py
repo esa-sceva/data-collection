@@ -50,8 +50,6 @@ class ElectromagneticScienceScraper(BaseIterativePublisherScraper):
         try:
             scraper = self._scrape_url(url)
 
-            # Get all PDF links using Selenium to scroll and handle cookie popup once
-            # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all(
             "a",
                 href=lambda href: href and "javascript:void" in href,

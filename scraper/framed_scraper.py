@@ -121,25 +121,7 @@ class FramedScraper(BaseIterativeIssuesPublisherScraper, ABC):
         return self._scrape_issue_url(link) or []
 
 
-class RigaTechnicalUniversityScraper(FramedScraper):
-    pass
-
-
-class JTITScraper(FramedScraper):
-    pass
-
-
-class CIMSJournalScraper(FramedScraper):
-    pass
-
-
-class CSTJournalScraper(FramedScraper):
-    @property
-    def article_classes(self) -> List[str] | None:
-        return ["pdf", "file"]
-
-
-class ITEECSJournalScraper(FramedScraper):
+class FramedScraperWithAbstracts(FramedScraper):
     @property
     def article_classes(self) -> List[str] | None:
         return None
@@ -152,7 +134,7 @@ class ITEECSJournalScraper(FramedScraper):
             scraper = self._scrape_url(article_url)
 
             pdf_tag = scraper.find(
-                "a", class_=lambda cls: cls and "pdf" in cls,  href=lambda href: href and "/article/view" in href
+                "a", class_=lambda cls: cls and "pdf" in cls, href=lambda href: href and "/article/view" in href
             )
             if not pdf_tag:
                 self._logger.warning(f"No PDF tag found for abstract: {article_url}")
@@ -180,6 +162,27 @@ class ITEECSJournalScraper(FramedScraper):
 
         return super().scrape_failure(failure)
 
+class RigaTechnicalUniversityScraper(FramedScraper):
+    pass
+
+
+class JTITScraper(FramedScraper):
+    pass
+
+
+class CIMSJournalScraper(FramedScraper):
+    pass
+
+
+class CSTJournalScraper(FramedScraper):
+    @property
+    def article_classes(self) -> List[str] | None:
+        return ["pdf", "file"]
+
+
+class ITEECSJournalScraper(FramedScraperWithAbstracts):
+    pass
+
 
 class IJEEASJournalScraper(FramedScraper):
     pass
@@ -194,4 +197,8 @@ class RESTIJournalScraper(FramedScraper):
 
 
 class EECCISJournalScraper(FramedScraper):
+    pass
+
+
+class JICTJournalScraper(FramedScraperWithAbstracts):
     pass

@@ -954,5 +954,31 @@
                 "end_issue": 57
             }
         ]
+    },
+    "JJCITJournalScraper": {
+        "bucket_key": "{main_folder}/jjcit_journal",
+        "base_url": "https://www.jjcit.org/",
+        "sources": [
+            {
+                "url": "https://www.jjcit.org/home/all_issues",
+                "type": "journal"
+            }
+        ]
+    },
+
+    "JICTJournalScraper": {
+        "bucket_key": "{main_folder}/jict_journal",
+        "journals": [
+            {
+                "url": "https://e-journal.uum.edu.my/index.php/jict/",
+                "name": "jict",
+                "start_issue": 350,
+                "end_issue": 380,
+                "special_issues": [
+                    "681", "406", "463", "492", "515", "801", "795", "787", "772", "756", "744", "736", "725", "696",
+                    "705", "712", "680", "645", "633", "612", "611", "610", "586", "529"
+                ]
+            }
+        ]
     }
 }

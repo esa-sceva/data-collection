@@ -36,8 +36,6 @@ class EPJPhotovoltaicsJournalScraper(BaseIterativeIssuesPublisherScraper):
         try:
             scraper = self._scrape_url(issue_url)
 
-            # Get all PDF links using Selenium to scroll and handle cookie popup once
-            # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all(
                 "a",
                 href=lambda href: href and "/epjpv/pdf/" in href and ".pdf" in href,

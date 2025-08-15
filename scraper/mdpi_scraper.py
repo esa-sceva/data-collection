@@ -59,8 +59,6 @@ class MDPIJournalsScraper(BaseIterativePublisherScraper, BaseMappedSubScraper):
         try:
             scraper = self._scrape_url(url)
 
-            # Get all PDF links using Selenium to scroll and handle cookie popup once
-            # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all("a", class_="UD_Listings_ArticlePDF", href=True)
             if not (pdf_links := [get_scraped_url_by_bs_tag(tag, self._config_model.base_url) for tag in tags]):
                 self._save_failure(url)

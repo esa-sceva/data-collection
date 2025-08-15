@@ -49,8 +49,6 @@ class RadioEngCZScraper(BaseIterativePublisherScraper):
         try:
             scraper = self._scrape_url(url)
 
-            # Get all PDF links using Selenium to scroll and handle cookie popup once
-            # Now find all PDF links using the class_="UD_Listings_ArticlePDF"
             tags = scraper.find_all("a", href=lambda href: href and "fulltexts" in href and ".pdf" in href)
 
             pdf_links = [get_scraped_url_by_bs_tag(tag, base_url) for tag in tags]
