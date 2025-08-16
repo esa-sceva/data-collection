@@ -730,7 +730,8 @@
     "EmeraldScraper": {
         "bucket_key": "{main_folder}/emerald",
         "base_url": "https://www.emerald.com/",
-        "cookie_selector": "button.onetrust-accept-btn-handler",
+        "cookie_selector": "button[id=onetrust-accept-btn-handler]",
+        "request_with_proxy": true,
         "sources": [
             {
                 "landing_page_url": "https://www.emerald.com/search-results?f_JournalDisplayName=Applied+Computing+and+Informatics&fl_JournalID=1000007&fl_SiteID=1&page={page_number}&f_ContentType=Journal+Articles&page_size={page_size}",

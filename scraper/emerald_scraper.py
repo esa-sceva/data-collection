@@ -32,10 +32,30 @@ class EmeraldScraper(BasePaginationPublisherScraper):
         try:
             scraper = self._scrape_url(url)
 
+            article_links = [
+                get_scraped_url_by_bs_tag(tag, self._config_model.base_url, with_querystring=True)
+                for tag in scraper.find_all(
+                    "a",
+                    href=lambda href: href and "doi.org/" in href,
+                    attrs={"target": lambda t: t and "blank" in t},
+                )
+            ]
+
+            pdf_tag_list = []
             # Now, visit each article link and find the PDF link
-            if not (pdf_tag_list := scraper.find_all(
-                    "a", href=lambda href: href and ".pdf" in href, class_=lambda cls: cls and "pdf" in cls
-            )):
+            for article_link in article_links:
+                self._logger.debug(f"Processing Page {article_link}")
+
+                page_scraper = self._scrape_url(article_link)
+                pdf_tag_list.extend(
+                    page_scraper.find_all(
+                        "a",
+                        href=lambda href: href and "article-pdf" in href and ".pdf" in href,
+                        class_=lambda cls: cls and "pdf" in cls,
+                    )
+                )
+
+            if not pdf_tag_list:
                 self._save_failure(url)
 
             self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")

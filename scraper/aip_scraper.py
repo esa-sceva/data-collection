@@ -49,7 +49,9 @@ class AIPScraper(BasePaginationPublisherScraper):
                 page_scraper = self._scrape_url(article_link)
                 pdf_tag_list.extend(
                     page_scraper.find_all(
-                        "a", href=lambda href: href and ".pdf" in href, class_=lambda cls: cls and "pdf" in cls
+                        "a",
+                        href=lambda href: href and "article-pdf" in href and ".pdf" in href,
+                        class_=lambda cls: cls and "pdf" in cls,
                     )
                 )
 
