@@ -990,5 +990,16 @@
                 "type": "journal"
             }
         ]
+    },
+    "TamkangUniversityPressScraper": {
+        "bucket_key": "{main_folder}/tku_press",
+        "base_url": "http://jase.tku.edu.tw/",
+        "cookie_selector": "a.sp-cookie-allow",
+        "sources": [
+            {
+                "url": "http://jase.tku.edu.tw/articles/issues/",
+                "type": "journal"
+            }
+        ]
     }
 }

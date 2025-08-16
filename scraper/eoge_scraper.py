@@ -23,7 +23,6 @@ class EOGEScraper(BaseUrlPublisherScraper):
                 button.click()
                 self._driver.sleep(1)
 
-            # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
             issues_tag_list = self._get_parsed_page_source().find_all(
                 "a", href=lambda href: href and "issue_" in href and ".html" in href
             )
@@ -33,10 +32,10 @@ class EOGEScraper(BaseUrlPublisherScraper):
                 tag
                 for tags in (
                     self._scrape_issue_or_collection(BaseUrlPublisherSource(
-                        url=get_scraped_url_by_bs_tag(tag, self._config_model.base_url),
+                        url=get_scraped_url_by_bs_tag(issue_tag, self._config_model.base_url),
                         type=str(SourceType.ISSUE_OR_COLLECTION)
                     ))
-                    for tag in issues_tag_list
+                    for issue_tag in issues_tag_list
                 )
                 if tags for tag in tags
             ]

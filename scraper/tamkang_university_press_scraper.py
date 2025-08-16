@@ -1,12 +1,13 @@
+import re
 from typing import List, Type
 from bs4 import Tag, ResultSet
 
-from helper.utils import get_scraped_url_by_bs_tag
+from helper.utils import get_scraped_url_by_bs_tag, get_scraped_url_by
 from model.base_url_publisher_models import BaseUrlPublisherSource, SourceType, BaseUrlPublisherConfig
 from scraper.base_url_publisher_scraper import BaseUrlPublisherScraper
 
 
-class JECEIJournalScraper(BaseUrlPublisherScraper):
+class TamkangUniversityPressScraper(BaseUrlPublisherScraper):
     @property
     def config_model_type(self) -> Type[BaseUrlPublisherConfig]:
         return BaseUrlPublisherConfig
@@ -15,14 +16,18 @@ class JECEIJournalScraper(BaseUrlPublisherScraper):
         try:
             self._scrape_url(source.url)
 
-            buttons = self._driver.cdp.find_elements("div.title.title_new", timeout=0.5)
+            buttons = self._driver.cdp.find_elements('a[data-toggle="collapse"]:not(.collapsed)', timeout=0.5)
             for button in buttons:
                 button.click()
                 self._driver.sleep(1)
 
-            # Find all issue links using appropriate class or tag (if lambda returns True, it will be included in the list)
             issues_tag_list = self._get_parsed_page_source().find_all(
-                "a", href=lambda href: href and "issue_" in href and ".html" in href
+                "a",
+                href=lambda href: (
+                        href
+                        and "/articles/" in href
+                        and len([m.start() for m in re.finditer('/', href)]) == 3
+                )
             )
 
             # For each tag of issues previously collected, scrape the issue as a collection of articles
@@ -50,11 +55,23 @@ class JECEIJournalScraper(BaseUrlPublisherScraper):
         try:
             scraper = self._scrape_url(source.url)
 
-            # Find all PDF links using appropriate class or tag (if lambda returns True, it will be included in the list)
-            if not (pdf_tag_list := scraper.find_all(
-                    "a", href=lambda href: href and "/article" in href and ".pdf" in href, class_="pdf_link"
+            if not (articles_tag_list := scraper.find_all(
+                    "a",
+                    href=lambda href: href and "/articles/jase" in href,
+                    attrs={"itemprop": lambda x: x and "url" in x}
             )):
                 self._save_failure(source.url)
+
+            pdf_tag_list = [
+                tag
+                for article_tag in articles_tag_list
+                if (tag := self._scrape_article(
+                    BaseUrlPublisherSource(
+                        url=get_scraped_url_by_bs_tag(article_tag, self._config_model.base_url),
+                        type=str(SourceType.ARTICLE)
+                    )
+                )) is not None
+            ]
 
             self._logger.debug(f"PDF links found: {len(pdf_tag_list)}")
             return pdf_tag_list
@@ -63,4 +80,22 @@ class JECEIJournalScraper(BaseUrlPublisherScraper):
             return None
 
     def _scrape_article(self, source: BaseUrlPublisherSource) -> Tag | None:
-        pass
+        self._logger.info(f"Processing Article {source.url}")
+
+        try:
+            scraper = self._scrape_url(source.url)
+
+            if not (button_tag := scraper.find("button", attrs={"onclick": lambda x: x and "window.open" in x})):
+                self._save_failure(source.url)
+                return None
+
+            pdf_tag = Tag(
+                name="a",
+                attrs={"href": get_scraped_url_by(button_tag["onclick"].split("'")[1], self._config_model.base_url)}
+            )
+
+            self._logger.debug(f"PDF link found: {pdf_tag['href']}")
+            return pdf_tag
+        except Exception as e:
+            self._log_and_save_failure(source.url, f"Failed to process Article {source.url}. Error: {e}")
+            return None

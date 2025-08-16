@@ -357,7 +357,7 @@ def get_bool_env(key: str, default: str) -> bool:
     return v == "true" or v == "1"
 
 
-def get_scraper_url_by(href: str, base_url: str, with_querystring: bool | None = False) -> str:
+def get_scraped_url_by(href: str, base_url: str, with_querystring: bool | None = False) -> str:
     if href.startswith("http"):
         return href.strip()
 
@@ -384,7 +384,7 @@ def get_scraped_url_by_bs_tag(tag: Tag, base_url: str, with_querystring: bool | 
         List[str]: A list of URLs of the articles in the issue.
     """
     href = tag.get("href", getattr(tag, "href"))
-    return get_scraper_url_by(href, base_url, with_querystring)
+    return get_scraped_url_by(href, base_url, with_querystring)
 
 
 def get_scraped_url_by_web_element(we: WebElement, base_url: str, with_querystring: bool | None = False) -> str:
@@ -400,7 +400,7 @@ def get_scraped_url_by_web_element(we: WebElement, base_url: str, with_querystri
         List[str]: A list of URLs of the articles in the issue.
     """
     href = we.get_attribute("href") or getattr(we, "href")
-    return get_scraper_url_by(href, base_url, with_querystring)
+    return get_scraped_url_by(href, base_url, with_querystring)
 
 
 def get_resource_from_remote_by_request(
