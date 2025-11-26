@@ -19,7 +19,7 @@ AWS_URL=http://minio:9100
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY=minio
 AWS_SECRET_KEY=minio1234
-AWS_BUCKET_NAME=esa-eve
+AWS_BUCKET_NAME=esa-satcom
 AWS_MAIN_FOLDER=raw_data
 
 MINIO_URL=http://minio:9100
